@@ -14,12 +14,9 @@ export interface CalculatorInput {
 
 export interface TaxBracketResult {
   label: string;
-  /** Límite inferior en soles */
   from: number;
-  /** Límite superior en soles (null = sin tope) */
   to: number | null;
   rate: number;
-  /** Monto que cae en este tramo */
   taxableBase: number;
   tax: number;
 }

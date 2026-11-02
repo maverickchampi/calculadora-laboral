@@ -14,6 +14,10 @@
   --color-card: var(--card);
 }
 
+html {
+  scrollbar-gutter: stable;
+}
+
 html,
 body {
   background-color: var(--bg);
