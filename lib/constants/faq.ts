@@ -37,7 +37,7 @@ export const FAQ_ITEMS: FaqItem[] = [
   {
     question: "¿La calculadora incluye gratificaciones y CTS?",
     answer:
-      "Las gratificaciones se consideran en el cálculo de la retención de quinta categoría. La CTS y el detalle de gratificaciones tendrán calculadoras propias.",
+      "Por el momento no, pero en las próximas versiones se está considerando.",
   },
   {
     question: "¿El resultado es exacto?",

@@ -45,10 +45,18 @@ export default function WithholdingDetail({ data }: WithholdingDetailProps) {
           <table className="w-full text-left text-xs">
             <thead className="bg-tint text-muted">
               <tr>
-                <th className="px-3 py-2 font-medium">Tramo</th>
-                <th className="px-2 py-2 text-right font-medium">Tasa</th>
-                <th className="px-2 py-2 text-right font-medium">Base</th>
-                <th className="px-3 py-2 text-right font-medium">Impuesto</th>
+                <th scope="col" className="px-3 py-2 font-medium">
+                  Tramo
+                </th>
+                <th scope="col" className="px-2 py-2 text-right font-medium">
+                  Tasa
+                </th>
+                <th scope="col" className="px-2 py-2 text-right font-medium">
+                  Base
+                </th>
+                <th scope="col" className="px-3 py-2 text-right font-medium">
+                  Impuesto
+                </th>
               </tr>
             </thead>
             <tbody>

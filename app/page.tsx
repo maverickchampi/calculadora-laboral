@@ -6,13 +6,14 @@ export default function Page() {
   const jsonLd = buildJsonLd();
 
   return (
-    <main className="flex flex-1 w-full flex-col">
-      <CalculatorApp />
-      <SeoContent />
+    <>
+      <CalculatorApp>
+        <SeoContent />
+      </CalculatorApp>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-    </main>
+    </>
   );
 }

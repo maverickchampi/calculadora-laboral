@@ -44,6 +44,7 @@ export default function CalculatorForm({
 }: CalculatorFormProps) {
   const [form, setForm] = useState<FormState>(INITIAL_STATE);
   const [resultado, setResultado] = useState<Breakdown | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   const set = <K extends keyof FormState>(key: K, value: FormState[K]) =>
     setForm((prev) => ({ ...prev, [key]: value }));
@@ -56,10 +57,13 @@ export default function CalculatorForm({
 
     const baseSalary = Number(form.baseSalary) || 0;
     if (baseSalary <= 0) {
+      setError("Ingresa tu sueldo base para calcular.");
       setResultado(null);
+      document.getElementById("base-salary")?.focus();
       return;
     }
 
+    setError(null);
     setResultado(
       calculateBreakdown({
         baseSalary,
@@ -76,12 +80,14 @@ export default function CalculatorForm({
   const handleClear = () => {
     setForm(INITIAL_STATE);
     setResultado(null);
+    setError(null);
   };
 
   return (
     <div className="space-y-6">
       <form
         className="space-y-6"
+        noValidate
         onSubmit={(e) => {
           e.preventDefault();
           handleCalculate();
@@ -90,13 +96,19 @@ export default function CalculatorForm({
         <Section title="Datos laborales">
           <div className="grid gap-5 sm:grid-cols-2 [&>*]:min-w-0">
             <Input
-              label="Sueldo base (S/)"
+              id="base-salary"
+              label="Sueldo base (S/) *"
               type="number"
+              required
               min={0}
               step="0.01"
               inputMode="decimal"
               value={form.baseSalary}
-              onChange={(e) => set("baseSalary", e.target.value)}
+              onChange={(e) => {
+                set("baseSalary", e.target.value);
+                if (error) setError(null);
+              }}
+              error={error ?? undefined}
             />
             <Select
               label="Año"
@@ -180,12 +192,14 @@ export default function CalculatorForm({
         </div>
       </form>
 
-      {resultado && (
-        <>
-          <ResultPanel data={resultado} />
-          <WithholdingDetail data={resultado.withholding} />
-        </>
-      )}
+      <div aria-live="polite" aria-atomic="false" className="space-y-6">
+        {resultado && (
+          <>
+            <ResultPanel data={resultado} />
+            <WithholdingDetail data={resultado.withholding} />
+          </>
+        )}
+      </div>
     </div>
   );
 }

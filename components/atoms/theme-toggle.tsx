@@ -1,22 +1,37 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import Button from "./button";
+
 export default function ThemeToggle() {
+  const [isDark, setIsDark] = useState(false);
+
+  useEffect(() => {
+    setIsDark(document.documentElement.getAttribute("data-theme") === "dark");
+  }, []);
+
   const toggle = () => {
     const root = document.documentElement;
     const next = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
     root.setAttribute("data-theme", next);
-    window.localStorage.setItem("theme", next);
+    try {
+      window.localStorage.setItem("theme", next);
+    } catch {
+      // localStorage puede no estar disponible (modo privado, etc.)
+    }
+    setIsDark(next === "dark");
   };
 
   return (
-    <button
-      type="button"
+    <Button
+      variant="outline"
       onClick={toggle}
-      aria-label="Cambiar entre modo claro y oscuro"
-      className="flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-xl border border-line bg-card text-foreground hover:border-brand hover:text-brand"
+      aria-label={isDark ? "Cambiar a modo claro" : "Cambiar a modo oscuro"}
+      aria-pressed={isDark}
+      className="h-10 w-10 p-0"
     >
       <i className="mc-moon theme-icon-moon" aria-hidden="true" />
       <i className="mc-sun theme-icon-sun" aria-hidden="true" />
-    </button>
+    </Button>
   );
 }

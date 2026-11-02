@@ -56,10 +56,18 @@ export default function SeoContent() {
             <table className="w-full text-left text-sm">
               <thead className="bg-tint text-muted">
                 <tr>
-                  <th className="px-3 py-2 font-medium">Año</th>
-                  <th className="px-3 py-2 font-medium">UIT</th>
-                  <th className="px-3 py-2 font-medium">RMV</th>
-                  <th className="px-3 py-2 font-medium">Asignación familiar</th>
+                  <th scope="col" className="px-3 py-2 font-medium">
+                    Año
+                  </th>
+                  <th scope="col" className="px-3 py-2 font-medium">
+                    UIT
+                  </th>
+                  <th scope="col" className="px-3 py-2 font-medium">
+                    RMV
+                  </th>
+                  <th scope="col" className="px-3 py-2 font-medium">
+                    Asignación familiar
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -90,9 +98,15 @@ export default function SeoContent() {
             <table className="w-full text-left text-sm">
               <thead className="bg-tint text-muted">
                 <tr>
-                  <th className="px-3 py-2 font-medium">Sistema</th>
-                  <th className="px-3 py-2 font-medium">Comisión por flujo</th>
-                  <th className="px-3 py-2 font-medium">Comisión mixta</th>
+                  <th scope="col" className="px-3 py-2 font-medium">
+                    Sistema
+                  </th>
+                  <th scope="col" className="px-3 py-2 font-medium">
+                    Comisión por flujo
+                  </th>
+                  <th scope="col" className="px-3 py-2 font-medium">
+                    Comisión mixta
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -122,9 +136,13 @@ export default function SeoContent() {
           </h2>
           <div className="mt-4 divide-y divide-line">
             {FAQ_ITEMS.map((item) => (
-              <details key={item.question} className="py-3">
-                <summary className="cursor-pointer list-none text-sm font-medium text-foreground">
-                  {item.question}
+              <details key={item.question} className="faq-item py-3">
+                <summary className="flex cursor-pointer list-none items-center justify-between gap-3 text-sm font-medium text-foreground">
+                  <span>{item.question}</span>
+                  <i
+                    className="mc-chevron-down faq-chevron shrink-0"
+                    aria-hidden="true"
+                  />
                 </summary>
                 <p className="mt-2 text-sm leading-relaxed text-muted">
                   {item.answer}
@@ -133,10 +151,6 @@ export default function SeoContent() {
             ))}
           </div>
         </section>
-
-        <footer className="pt-2 text-center text-xs text-muted">
-          Fuente: SUNAT y SBS · Actualizado 2026 · Calculadora Laboral
-        </footer>
       </div>
     </div>
   );

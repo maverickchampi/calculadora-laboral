@@ -4,7 +4,7 @@
   --bg: #ffffff;
   --bg-subtle: #f6f6f8;
   --fg: #16161a;
-  --fg-muted: #667085;
+  --fg-muted: #5b6573;
   --brand: #d91023;
   --brand-hover: #b80d1d;
   --brand-soft: #fdeef0;
@@ -69,14 +69,19 @@
   display: none;
 }
 
-/* Sin blur: al cambiar de tema se recomponía lento y "parpadeaba". */
 .styles_module_modalComponent {
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
 }
 
-/* Tinte secundario (cabeceras/modales). Definido aquí para no depender
-   de la generación de la utilidad por Tailwind. */
 .bg-tint {
   background-color: var(--tint);
+}
+
+.faq-item > summary .faq-chevron {
+  transition: transform 0.15s ease;
+}
+
+.faq-item[open] > summary .faq-chevron {
+  transform: rotate(180deg);
 }
