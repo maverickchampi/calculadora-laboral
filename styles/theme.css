@@ -1,0 +1,82 @@
+:root:root {
+  color-scheme: light;
+
+  --bg: #ffffff;
+  --bg-subtle: #f6f6f8;
+  --fg: #16161a;
+  --fg-muted: #667085;
+  --brand: #d91023;
+  --brand-hover: #b80d1d;
+  --brand-soft: #fdeef0;
+  --tint: #f4f1ea;
+  --line: #e8e8ec;
+  --card: #ffffff;
+
+  --mc-color-bg-main: var(--bg);
+  --mc-color-primary: var(--brand);
+  --mc-color-border: var(--line);
+  --mc-color-text: var(--fg);
+  --mc-color-placeholder: var(--fg-muted);
+  --mc-color-disabled: #a8a8a8;
+  --mc-color-error: #b00020;
+  --mc-color-bg-nav: rgba(255, 255, 255, 0.72);
+  --mc-color-border-nav: #ffffff;
+  --mc-color-shadow-nav:
+    rgb(255, 255, 255) 0px 0px 0px 0px,
+    rgb(211, 211, 211) 0px 0px 0px 1px,
+    rgba(0, 0, 0, 0) 0px 0px 0px 0px;
+  --mc-font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --bg: #0e0e11;
+  --bg-subtle: #17171b;
+  --fg: #f2f2f4;
+  --fg-muted: #9b9ba3;
+  --brand: #ff5a65;
+  --brand-hover: #ff7b85;
+  --brand-soft: rgba(255, 90, 101, 0.14);
+  --tint: rgba(212, 199, 178, 0.1);
+  --line: #26262b;
+  --card: #17171b;
+
+  --mc-color-bg-main: var(--bg);
+  --mc-color-primary: var(--brand);
+  --mc-color-border: var(--line);
+  --mc-color-text: var(--fg);
+  --mc-color-placeholder: var(--fg-muted);
+  --mc-color-disabled: #585858;
+  --mc-color-error: #ff6b6b;
+  --mc-color-bg-nav: rgba(23, 23, 23, 0.72);
+  --mc-color-border-nav: rgba(255, 255, 255, 0.2);
+  --mc-color-shadow-nav:
+    rgb(255, 255, 255) 0px 0px 0px 0px,
+    rgb(26, 26, 26) 0px 0px 0px 1px,
+    rgba(0, 0, 0, 0) 0px 0px 0px 0px;
+}
+
+.theme-icon-sun {
+  display: none;
+}
+
+[data-theme="dark"] .theme-icon-sun {
+  display: inline-block;
+}
+
+[data-theme="dark"] .theme-icon-moon {
+  display: none;
+}
+
+/* Sin blur: al cambiar de tema se recomponía lento y "parpadeaba". */
+.styles_module_modalComponent {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* Tinte secundario (cabeceras/modales). Definido aquí para no depender
+   de la generación de la utilidad por Tailwind. */
+.bg-tint {
+  background-color: var(--tint);
+}
