@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Geist } from "next/font/google";
 import "./globals.css";
 import { SITE_NAME, SITE_URL } from "@/lib/seo/site";
+import { STORAGE_KEYS } from "@/lib/constants/storage";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -76,7 +77,7 @@ export const viewport: Viewport = {
 const themeInitScript = `
 (function () {
   try {
-    var stored = localStorage.getItem("theme");
+    var stored = localStorage.getItem("${STORAGE_KEYS.theme}");
     document.documentElement.setAttribute(
       "data-theme",
       stored === "dark" ? "dark" : "light"

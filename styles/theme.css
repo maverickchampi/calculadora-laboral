@@ -12,7 +12,7 @@
   --line: #e8e8ec;
   --card: #ffffff;
 
-  --mc-color-bg-main: var(--bg);
+  --mc-color-bg-main: var(--card);
   --mc-color-primary: var(--brand);
   --mc-color-border: var(--line);
   --mc-color-text: var(--fg);
@@ -42,7 +42,7 @@
   --line: #26262b;
   --card: #17171b;
 
-  --mc-color-bg-main: var(--bg);
+  --mc-color-bg-main: var(--card);
   --mc-color-primary: var(--brand);
   --mc-color-border: var(--line);
   --mc-color-text: var(--fg);
@@ -85,3 +85,5 @@
 .faq-item[open] > summary .faq-chevron {
   transform: rotate(180deg);
 }
+
+

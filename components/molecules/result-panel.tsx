@@ -7,7 +7,7 @@ interface ResultPanelProps {
 
 export default function ResultPanel({ data }: ResultPanelProps) {
   return (
-    <section className="rounded-2xl border border-line bg-card p-6 sm:p-8">
+    <section className="rounded-2xl border border-line bg-card p-5 sm:p-8">
       <h2 className="text-sm font-semibold uppercase tracking-wide text-muted">
         Resultado
       </h2>

@@ -10,37 +10,32 @@ import { calculateBreakdown } from "@/lib/payroll/calculate";
 import type { Breakdown, CommissionType } from "@/lib/payroll/types";
 import {
   COMMISSION_TYPE_OPTIONS,
+  FAMILY_ALLOWANCE_OPTIONS,
   PENSION_OPTIONS,
   YEAR_OPTIONS,
-  familyAllowanceOptions,
 } from "@/lib/constants/form-options";
+import type { FormSettings } from "@/lib/storage/form-settings";
 
 interface CalculatorFormProps {
-  year: number | null;
-  onYearChange: (year: number) => void;
+  settings: FormSettings;
+  onSettingsChange: (patch: Partial<FormSettings>) => void;
 }
 
 interface FormState {
   baseSalary: string;
-  pensionFundId: string;
-  commissionType: string;
-  familyAllowance: string;
   bonuses: string;
   additionalDeduction: string;
 }
 
 const INITIAL_STATE: FormState = {
   baseSalary: "",
-  pensionFundId: "onp",
-  commissionType: "flow",
-  familyAllowance: "no",
   bonuses: "",
   additionalDeduction: "",
 };
 
 export default function CalculatorForm({
-  year,
-  onYearChange,
+  settings,
+  onSettingsChange,
 }: CalculatorFormProps) {
   const [form, setForm] = useState<FormState>(INITIAL_STATE);
   const [resultado, setResultado] = useState<Breakdown | null>(null);
@@ -49,11 +44,10 @@ export default function CalculatorForm({
   const set = <K extends keyof FormState>(key: K, value: FormState[K]) =>
     setForm((prev) => ({ ...prev, [key]: value }));
 
-  const isAfp = form.pensionFundId !== "onp";
-  const allowanceOptions = familyAllowanceOptions(year);
+  const isAfp = settings.pensionFundId !== "onp";
 
   const handleCalculate = () => {
-    if (year === null) return;
+    if (settings.year === null) return;
 
     const baseSalary = Number(form.baseSalary) || 0;
     if (baseSalary <= 0) {
@@ -67,10 +61,10 @@ export default function CalculatorForm({
     setResultado(
       calculateBreakdown({
         baseSalary,
-        pensionFundId: form.pensionFundId,
-        commissionType: form.commissionType as CommissionType,
-        year,
-        hasFamilyAllowance: form.familyAllowance === "yes",
+        pensionFundId: settings.pensionFundId,
+        commissionType: settings.commissionType as CommissionType,
+        year: settings.year,
+        hasFamilyAllowance: settings.familyAllowance === "yes",
         bonuses: Number(form.bonuses) || 0,
         additionalDeduction: Number(form.additionalDeduction) || 0,
       }),
@@ -112,8 +106,8 @@ export default function CalculatorForm({
             />
             <Select
               label="Año"
-              value={year === null ? "" : String(year)}
-              onChange={(e) => onYearChange(Number(e.target.value))}
+              value={settings.year === null ? "" : String(settings.year)}
+              onChange={(e) => onSettingsChange({ year: Number(e.target.value) })}
             >
               {YEAR_OPTIONS.map((o) => (
                 <option key={o.value} value={o.value}>
@@ -123,8 +117,10 @@ export default function CalculatorForm({
             </Select>
             <Select
               label="Sistema de pensiones"
-              value={form.pensionFundId}
-              onChange={(e) => set("pensionFundId", e.target.value)}
+              value={settings.pensionFundId}
+              onChange={(e) =>
+                onSettingsChange({ pensionFundId: e.target.value })
+              }
             >
               {PENSION_OPTIONS.map((o) => (
                 <option key={o.value} value={o.value}>
@@ -135,8 +131,10 @@ export default function CalculatorForm({
             {isAfp && (
               <Select
                 label="Tipo de comisión"
-                value={form.commissionType}
-                onChange={(e) => set("commissionType", e.target.value)}
+                value={settings.commissionType}
+                onChange={(e) =>
+                  onSettingsChange({ commissionType: e.target.value })
+                }
               >
                 {COMMISSION_TYPE_OPTIONS.map((o) => (
                   <option key={o.value} value={o.value}>
@@ -147,10 +145,12 @@ export default function CalculatorForm({
             )}
             <Select
               label="Asignación familiar"
-              value={form.familyAllowance}
-              onChange={(e) => set("familyAllowance", e.target.value)}
+              value={settings.familyAllowance}
+              onChange={(e) =>
+                onSettingsChange({ familyAllowance: e.target.value })
+              }
             >
-              {allowanceOptions.map((o) => (
+              {FAMILY_ALLOWANCE_OPTIONS.map((o) => (
                 <option key={o.value} value={o.value}>
                   {o.label}
                 </option>
@@ -186,9 +186,11 @@ export default function CalculatorForm({
           <Button type="submit" variant="primary" className="sm:flex-1">
             Calcular
           </Button>
-          <Button type="button" variant="outline" onClick={handleClear}>
-            Limpiar
-          </Button>
+          {resultado && (
+            <Button type="button" variant="outline" onClick={handleClear}>
+              Limpiar
+            </Button>
+          )}
         </div>
       </form>
 
@@ -207,10 +209,10 @@ export default function CalculatorForm({
 function Section({ title, children }: { title: string; children: ReactNode }) {
   return (
     <section className="overflow-hidden rounded-2xl border border-line bg-card">
-      <div className="border-b border-line bg-tint px-6 py-3">
+      <div className="border-b border-line bg-tint px-5 py-3 sm:px-6">
         <h2 className="text-sm font-semibold text-foreground">{title}</h2>
       </div>
-      <div className="p-6 sm:p-8">{children}</div>
+      <div className="p-5 sm:p-8">{children}</div>
     </section>
   );
 }

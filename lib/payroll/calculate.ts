@@ -50,7 +50,7 @@ export function calculateBreakdown(input: CalculatorInput): Breakdown {
 /**
  * Fifth-category income:
  *  - Annual gross income = salary × 12 + (salary × 1.09) × 2
- *  - Net income = gross income − 7 UIT
+ *  - Net income = gross income - 7 UIT
  *  - Apply the progressive tax scale by brackets (in UIT for the year)
  *  - Monthly withholding = annual tax ÷ 12
  */

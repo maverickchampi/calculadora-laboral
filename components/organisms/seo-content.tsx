@@ -5,9 +5,9 @@ import { formatSoles } from "@/lib/helpers/format";
 
 export default function SeoContent() {
   return (
-    <div className="mx-auto w-full max-w-[1024px] px-6 pb-16">
+    <div className="mx-auto w-full max-w-[1024px] px-4 pb-12 sm:px-6 sm:pb-16">
       <div className="space-y-6">
-        <section className="rounded-2xl border border-line bg-card p-6 sm:p-8">
+        <section className="rounded-2xl border border-line bg-card p-5 sm:p-8">
           <h2 className="text-lg font-semibold text-foreground">
             ¿Cómo se calcula el sueldo neto en Perú?
           </h2>
@@ -22,7 +22,7 @@ export default function SeoContent() {
               <span className="font-medium text-foreground">
                 Remuneración bruta:
               </span>{" "}
-              sueldo base + asignación familiar + bonos − descuentos
+              sueldo base + asignación familiar + bonos - descuentos
               adicionales.
             </li>
             <li>
@@ -33,17 +33,17 @@ export default function SeoContent() {
               <span className="font-medium text-foreground">
                 Retención de quinta categoría:
               </span>{" "}
-              renta anual proyectada − 7 UIT, con escala progresiva y dividida
+              renta anual proyectada - 7 UIT, con escala progresiva y dividida
               entre 12.
             </li>
             <li>
               <span className="font-medium text-foreground">Sueldo neto:</span>{" "}
-              remuneración bruta − pensión − retención.
+              remuneración bruta - pensión - retención.
             </li>
           </ol>
         </section>
 
-        <section className="rounded-2xl border border-line bg-card p-6 sm:p-8">
+        <section className="rounded-2xl border border-line bg-card p-5 sm:p-8">
           <h2 className="text-lg font-semibold text-foreground">
             Datos fiscales
           </h2>
@@ -130,7 +130,7 @@ export default function SeoContent() {
           </div>
         </section>
 
-        <section className="rounded-2xl border border-line bg-card p-6 sm:p-8">
+        <section className="rounded-2xl border border-line bg-card p-5 sm:p-8">
           <h2 className="text-lg font-semibold text-foreground">
             Preguntas frecuentes
           </h2>

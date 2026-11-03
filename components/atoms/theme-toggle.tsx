@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Button from "./button";
+import { STORAGE_KEYS } from "@/lib/constants/storage";
 
 export default function ThemeToggle() {
   const [isDark, setIsDark] = useState(false);
@@ -14,11 +15,7 @@ export default function ThemeToggle() {
     const root = document.documentElement;
     const next = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
     root.setAttribute("data-theme", next);
-    try {
-      window.localStorage.setItem("theme", next);
-    } catch {
-      // localStorage puede no estar disponible (modo privado, etc.)
-    }
+    window.localStorage.setItem(STORAGE_KEYS.theme, next);
     setIsDark(next === "dark");
   };
 

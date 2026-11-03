@@ -113,16 +113,16 @@ styles/
 ## How the calculation works
 
 ```
-Gross salary = base salary + family allowance + bonuses − additional deductions
+Gross salary = base salary + family allowance + bonuses - additional deductions
 Pension      = ONP 13%  |  AFP (10% + 1.37% insurance + commission)
-Net salary   = gross − pension − monthly income tax
+Net salary   = gross - pension - monthly income tax
 ```
 
 ### Fifth-category income tax
 
 ```
 Annual gross    = gross × 12 + (gross × 1.09) × 2   # two gratificaciones
-Annual net      = annual gross − 7 UIT
+Annual net      = annual gross - 7 UIT
 Annual tax      = progressive brackets applied to annual net
 Monthly tax     = annual tax ÷ 12
 ```

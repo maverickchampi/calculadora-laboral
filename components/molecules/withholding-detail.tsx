@@ -7,7 +7,7 @@ interface WithholdingDetailProps {
 
 export default function WithholdingDetail({ data }: WithholdingDetailProps) {
   return (
-    <section className="rounded-2xl border border-line bg-card p-6 sm:p-8">
+    <section className="rounded-2xl border border-line bg-card p-5 sm:p-8">
       <h2 className="text-sm font-semibold uppercase tracking-wide text-muted">
         Detalle de renta (5ta categoría)
       </h2>
@@ -27,7 +27,7 @@ export default function WithholdingDetail({ data }: WithholdingDetailProps) {
           />
         </div>
         <Row
-          label="− 7 UIT"
+          label="- 7 UIT"
           value={`-${formatSoles(data.uitDeduction)}`}
         />
         <Row
