@@ -39,7 +39,7 @@ export default function ResultPanel({ data }: ResultPanelProps) {
 function Row({
   label,
   value,
-  strong = false,
+  strong = false
 }: {
   label: string;
   value: number;

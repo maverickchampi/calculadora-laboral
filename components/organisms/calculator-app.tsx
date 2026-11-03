@@ -10,7 +10,7 @@ import {
   DEFAULT_FORM_SETTINGS,
   loadFormSettings,
   saveFormSettings,
-  type FormSettings,
+  type FormSettings
 } from "@/lib/storage/form-settings";
 
 const useIsomorphicLayoutEffect =
@@ -39,7 +39,7 @@ export default function CalculatorApp({ children }: CalculatorAppProps) {
       commissionType:
         stored?.commissionType ?? DEFAULT_FORM_SETTINGS.commissionType,
       familyAllowance:
-        stored?.familyAllowance ?? DEFAULT_FORM_SETTINGS.familyAllowance,
+        stored?.familyAllowance ?? DEFAULT_FORM_SETTINGS.familyAllowance
     });
   }, []);
 

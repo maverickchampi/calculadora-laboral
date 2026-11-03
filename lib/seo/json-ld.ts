@@ -17,8 +17,8 @@ export function buildJsonLd() {
         offers: {
           "@type": "Offer",
           price: "0",
-          priceCurrency: "PEN",
-        },
+          priceCurrency: "PEN"
+        }
       },
       {
         "@type": "FAQPage",
@@ -27,10 +27,10 @@ export function buildJsonLd() {
           name: item.question,
           acceptedAnswer: {
             "@type": "Answer",
-            text: item.answer,
-          },
-        })),
-      },
-    ],
+            text: item.answer
+          }
+        }))
+      }
+    ]
   };
 }

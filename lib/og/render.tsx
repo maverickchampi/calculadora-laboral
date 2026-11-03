@@ -10,7 +10,7 @@ export function renderSocialImage() {
         background: "#ffffff",
         padding: "80px",
         flexDirection: "column",
-        justifyContent: "space-between",
+        justifyContent: "space-between"
       }}
     >
       <div style={{ display: "flex", alignItems: "center" }}>
@@ -25,7 +25,7 @@ export function renderSocialImage() {
             fontSize: 40,
             fontWeight: 700,
             alignItems: "center",
-            justifyContent: "center",
+            justifyContent: "center"
           }}
         >
           CL
@@ -36,7 +36,7 @@ export function renderSocialImage() {
             marginLeft: 24,
             fontSize: 30,
             fontWeight: 700,
-            color: "#16161a",
+            color: "#16161a"
           }}
         >
           {SITE_NAME}
@@ -49,7 +49,7 @@ export function renderSocialImage() {
             fontSize: 68,
             fontWeight: 700,
             color: "#16161a",
-            lineHeight: 1.1,
+            lineHeight: 1.1
           }}
         >
           Calculadora de sueldo neto en Perú

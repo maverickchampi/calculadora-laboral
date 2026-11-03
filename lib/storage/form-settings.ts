@@ -11,7 +11,7 @@ export const DEFAULT_FORM_SETTINGS: FormSettings = {
   year: null,
   pensionFundId: "onp",
   commissionType: "flow",
-  familyAllowance: "no",
+  familyAllowance: "no"
 };
 
 export function loadFormSettings(): Partial<FormSettings> | null {

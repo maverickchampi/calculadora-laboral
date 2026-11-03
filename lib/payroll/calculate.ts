@@ -3,14 +3,14 @@ import {
   GRATIFICATION_BONUS_RATE,
   GRATIFICATIONS_PER_YEAR,
   INCOME_TAX_DEDUCTION_UIT,
-  TAX_BRACKETS,
+  TAX_BRACKETS
 } from "@/lib/constants/fiscal-years";
 import { getPensionRate, PENSION_FUNDS } from "@/lib/constants/pension-funds";
 import type {
   Breakdown,
   CalculatorInput,
   TaxBracketResult,
-  WithholdingBreakdown,
+  WithholdingBreakdown
 } from "./types";
 
 export function calculateBreakdown(input: CalculatorInput): Breakdown {
@@ -43,7 +43,7 @@ export function calculateBreakdown(input: CalculatorInput): Breakdown {
     pensionRate,
     withholdingAmount: withholding.monthlyWithholding,
     withholding,
-    net,
+    net
   };
 }
 
@@ -56,7 +56,7 @@ export function calculateBreakdown(input: CalculatorInput): Breakdown {
  */
 export function calculateWithholding(
   monthlyGross: number,
-  uit: number,
+  uit: number
 ): WithholdingBreakdown {
   const annualSalary = monthlyGross * 12;
   const gratificationEach = monthlyGross * (1 + GRATIFICATION_BONUS_RATE);
@@ -77,7 +77,7 @@ export function calculateWithholding(
       to: bracket.toUit === null ? null : to,
       rate: bracket.rate,
       taxableBase,
-      tax: taxableBase * bracket.rate,
+      tax: taxableBase * bracket.rate
     };
   });
 
@@ -93,6 +93,6 @@ export function calculateWithholding(
     annualNetIncome,
     brackets,
     annualTax,
-    monthlyWithholding: annualTax / 12,
+    monthlyWithholding: annualTax / 12
   };
 }

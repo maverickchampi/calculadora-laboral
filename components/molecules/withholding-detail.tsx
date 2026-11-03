@@ -104,7 +104,7 @@ export default function WithholdingDetail({ data }: WithholdingDetailProps) {
 function Row({
   label,
   value,
-  strong = false,
+  strong = false
 }: {
   label: string;
   value: string;

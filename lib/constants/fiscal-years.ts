@@ -8,11 +8,11 @@ export interface FiscalYear {
 
 export const FISCAL_YEARS: Record<number, FiscalYear> = {
   2025: { year: 2025, uit: 5350, minimumWage: 1130, familyAllowance: 113 },
-  2026: { year: 2026, uit: 5500, minimumWage: 1230, familyAllowance: 123 },
+  2026: { year: 2026, uit: 5500, minimumWage: 1230, familyAllowance: 123 }
 };
 
 export const SUPPORTED_YEARS = Object.values(FISCAL_YEARS).sort(
-  (a, b) => a.year - b.year,
+  (a, b) => a.year - b.year
 );
 
 export function getFiscalYear(year: number): FiscalYear {
@@ -47,5 +47,5 @@ export const TAX_BRACKETS: TaxBracket[] = [
   { fromUit: 5, toUit: 20, rate: 0.14, label: "Más de 5 a 20 UIT" },
   { fromUit: 20, toUit: 35, rate: 0.17, label: "Más de 20 a 35 UIT" },
   { fromUit: 35, toUit: 45, rate: 0.2, label: "Más de 35 a 45 UIT" },
-  { fromUit: 45, toUit: null, rate: 0.3, label: "Más de 45 UIT" },
+  { fromUit: 45, toUit: null, rate: 0.3, label: "Más de 45 UIT" }
 ];

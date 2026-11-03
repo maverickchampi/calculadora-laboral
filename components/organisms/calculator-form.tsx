@@ -12,7 +12,7 @@ import {
   COMMISSION_TYPE_OPTIONS,
   FAMILY_ALLOWANCE_OPTIONS,
   PENSION_OPTIONS,
-  YEAR_OPTIONS,
+  YEAR_OPTIONS
 } from "@/lib/constants/form-options";
 import type { FormSettings } from "@/lib/storage/form-settings";
 
@@ -30,12 +30,12 @@ interface FormState {
 const INITIAL_STATE: FormState = {
   baseSalary: "",
   bonuses: "",
-  additionalDeduction: "",
+  additionalDeduction: ""
 };
 
 export default function CalculatorForm({
   settings,
-  onSettingsChange,
+  onSettingsChange
 }: CalculatorFormProps) {
   const [form, setForm] = useState<FormState>(INITIAL_STATE);
   const [resultado, setResultado] = useState<Breakdown | null>(null);
@@ -66,8 +66,8 @@ export default function CalculatorForm({
         year: settings.year,
         hasFamilyAllowance: settings.familyAllowance === "yes",
         bonuses: Number(form.bonuses) || 0,
-        additionalDeduction: Number(form.additionalDeduction) || 0,
-      }),
+        additionalDeduction: Number(form.additionalDeduction) || 0
+      })
     );
   };
 

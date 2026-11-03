@@ -25,7 +25,7 @@ export const PENSION_FUNDS: PensionFund[] = [
     insurancePremium: 0,
     flowCommission: 0,
     mixedFlowCommission: 0,
-    mixedBalanceCommission: 0,
+    mixedBalanceCommission: 0
   },
   {
     id: "afp-integra",
@@ -35,7 +35,7 @@ export const PENSION_FUNDS: PensionFund[] = [
     insurancePremium: 1.37,
     flowCommission: 1.55,
     mixedFlowCommission: 0,
-    mixedBalanceCommission: 0.78,
+    mixedBalanceCommission: 0.78
   },
   {
     id: "afp-prima",
@@ -45,7 +45,7 @@ export const PENSION_FUNDS: PensionFund[] = [
     insurancePremium: 1.37,
     flowCommission: 1.6,
     mixedFlowCommission: 0.18,
-    mixedBalanceCommission: 1.25,
+    mixedBalanceCommission: 1.25
   },
   {
     id: "afp-habitat",
@@ -55,7 +55,7 @@ export const PENSION_FUNDS: PensionFund[] = [
     insurancePremium: 1.37,
     flowCommission: 1.47,
     mixedFlowCommission: 0.38,
-    mixedBalanceCommission: 1.25,
+    mixedBalanceCommission: 1.25
   },
   {
     id: "afp-profuturo",
@@ -65,13 +65,13 @@ export const PENSION_FUNDS: PensionFund[] = [
     insurancePremium: 1.37,
     flowCommission: 1.69,
     mixedFlowCommission: 0.67,
-    mixedBalanceCommission: 0.68,
-  },
+    mixedBalanceCommission: 0.68
+  }
 ];
 
 export function getPensionRate(
   fund: PensionFund,
-  commissionType: CommissionType,
+  commissionType: CommissionType
 ): number {
   if (fund.kind === "onp") return fund.contribution;
 
