@@ -16,7 +16,7 @@ export default function WithholdingDetail({ data }: WithholdingDetailProps) {
         <Row label="Sueldo bruto mensual" value={formatSoles(data.monthlyGross)} />
         <Row label="× 12 meses" value={formatSoles(data.annualSalary)} />
         <Row
-          label="Gratificaciones (sueldo × 1.09 × 2)"
+          label="Gratificaciones (sueldo × 2)"
           value={formatSoles(data.gratificationTotal)}
         />
         <div className="border-t border-line pt-2">

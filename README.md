@@ -121,7 +121,7 @@ Net salary   = gross - pension - monthly income tax
 ### Fifth-category income tax
 
 ```
-Annual gross    = gross × 12 + (gross × 1.09) × 2   # two gratificaciones
+Annual gross    = gross × 12 + gross × 2   # two gratificaciones (no incluye bonificación del 9%)
 Annual net      = annual gross - 7 UIT
 Annual tax      = progressive brackets applied to annual net
 Monthly tax     = annual tax ÷ 12

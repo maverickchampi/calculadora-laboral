@@ -33,8 +33,6 @@ export function getDefaultYear(currentYear: number): number {
 export const INCOME_TAX_DEDUCTION_UIT = 7;
 
 export const GRATIFICATIONS_PER_YEAR = 2;
-
-export const GRATIFICATION_BONUS_RATE = 0.09;
 export interface TaxBracket {
   fromUit: number;
   toUit: number | null; // null = no limit

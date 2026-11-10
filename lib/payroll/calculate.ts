@@ -1,6 +1,5 @@
 import {
   getFiscalYear,
-  GRATIFICATION_BONUS_RATE,
   GRATIFICATIONS_PER_YEAR,
   INCOME_TAX_DEDUCTION_UIT,
   TAX_BRACKETS
@@ -49,7 +48,8 @@ export function calculateBreakdown(input: CalculatorInput): Breakdown {
 
 /**
  * Fifth-category income:
- *  - Annual gross income = salary × 12 + (salary × 1.09) × 2
+ *  - Annual gross income = salary × 12 + salary × 2
+ *    (gratificaciones sin la bonificación extraordinaria del 9%)
  *  - Net income = gross income - 7 UIT
  *  - Apply the progressive tax scale by brackets (in UIT for the year)
  *  - Monthly withholding = annual tax ÷ 12
@@ -59,7 +59,7 @@ export function calculateWithholding(
   uit: number
 ): WithholdingBreakdown {
   const annualSalary = monthlyGross * 12;
-  const gratificationEach = monthlyGross * (1 + GRATIFICATION_BONUS_RATE);
+  const gratificationEach = monthlyGross;
   const gratificationTotal = gratificationEach * GRATIFICATIONS_PER_YEAR;
   const annualGrossIncome = annualSalary + gratificationTotal;
 
