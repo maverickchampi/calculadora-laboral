@@ -35,20 +35,4 @@ export const entryDateRules: RegisterOptions<
   "entryDate"
 > = {
   required: "Ingresa tu fecha de ingreso.",
-  validate: (value) => {
-    const date = new Date(`${value}T00:00:00`);
-
-    if (Number.isNaN(date.getTime())) {
-      return "Ingresa una fecha válida.";
-    }
-
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-
-    if (date > today) {
-      return "La fecha de ingreso no puede ser futura.";
-    }
-
-    return true;
-  }
 };

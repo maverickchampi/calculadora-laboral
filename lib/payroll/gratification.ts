@@ -1,4 +1,5 @@
 import { getFiscalYear } from "@/lib/constants/fiscal-years";
+import { completeMonths, parseLocalDate, startOfDay } from "./periods";
 
 export type InsuranceType = "essalud" | "eps";
 export type GratificationType = "julio" | "diciembre";
@@ -21,7 +22,6 @@ export interface GratificationInput {
   insuranceType: InsuranceType;
   entryDate: string; // yyyy-mm-dd
   fiscalYear: number;
-  referenceDate?: Date;
 }
 
 const BONUS_RATE: Record<InsuranceType, number> = {
@@ -44,27 +44,11 @@ function getPeriodBounds(year: number, type: GratificationType) {
   };
 }
 
-function completeMonths(start: Date, end: Date): number {
-  if (start > end) return 0;
-
-  const months =
-    (end.getFullYear() - start.getFullYear()) * 12 +
-    (end.getMonth() - start.getMonth()) +
-    1;
-
-  return Math.max(0, Math.min(6, start.getDate() === 1 ? months : months - 1));
-}
-
-function parseEntryDate(value: string): Date | null {
-  const date = new Date(`${value}T00:00:00`);
-  return Number.isNaN(date.getTime()) ? null : date;
-}
-
 export function calculateGratifications(
   input: GratificationInput
 ): GratificationPeriod[] {
-  const reference = input.referenceDate ?? new Date();
-  const entry = parseEntryDate(input.entryDate);
+  const reference = startOfDay(new Date());
+  const entry = parseLocalDate(input.entryDate);
 
   if (!entry) return [];
 
