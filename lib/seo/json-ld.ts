@@ -1,7 +1,8 @@
-import { FAQ_ITEMS } from "@/lib/constants/faq";
 import { SITE_NAME, SITE_URL } from "./site";
 
-export function buildJsonLd() {
+export function buildJsonLd(
+  faqs: Array<{ question: string; answer: string }>
+) {
   return {
     "@context": "https://schema.org",
     "@graph": [
@@ -22,7 +23,7 @@ export function buildJsonLd() {
       },
       {
         "@type": "FAQPage",
-        mainEntity: FAQ_ITEMS.map((item) => ({
+        mainEntity: faqs.map((item) => ({
           "@type": "Question",
           name: item.question,
           acceptedAnswer: {

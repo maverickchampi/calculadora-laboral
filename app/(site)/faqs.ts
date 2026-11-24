@@ -1,7 +1,4 @@
-export interface FaqItem {
-  question: string;
-  answer: string;
-}
+import type { FaqItem } from "@/components/molecules/faq-accordion";
 
 export const FAQ_ITEMS: FaqItem[] = [
   {
@@ -15,14 +12,9 @@ export const FAQ_ITEMS: FaqItem[] = [
       "Principalmente dos: el aporte previsional (ONP 13% o AFP: 10% de aporte, prima de seguro y comisión) y la retención de quinta categoría. La asignación familiar y los bonos se suman, no se descuentan."
   },
   {
-    question: "¿Cuánto se descuenta por ONP y AFP en 2026?",
+    question: "¿Qué es la asignación familiar?",
     answer:
-      "La ONP descuenta 13% de la remuneración. En las AFP el descuento incluye 10% de aporte obligatorio, 1.37% de prima de seguro y la comisión de la administradora (por flujo o mixta), que varía según la AFP."
-  },
-  {
-    question: "¿Qué es la asignación familiar y cuánto es en 2026?",
-    answer:
-      "Es un beneficio equivalente al 10% de la Remuneración Mínima Vital (RMV). En 2026 la RMV es S/ 1,230, por lo que la asignación familiar es S/ 123 mensuales."
+      "Es un beneficio equivalente al 10% de la Remuneración Mínima Vital (RMV). Se otorga a los trabajadores que tengan hijos menores de 18 años (o hasta los 24 años si cursan estudios superiores)."
   },
   {
     question: "¿Cómo se calcula la retención de quinta categoría?",
@@ -30,14 +22,14 @@ export const FAQ_ITEMS: FaqItem[] = [
       "Se proyecta la renta anual: sueldo por 12 más las gratificaciones. A ese total se le resta 7 UIT y se aplica la escala progresiva de 8%, 14%, 17%, 20% y 30%. El impuesto anual se divide entre 12 para obtener la retención mensual."
   },
   {
-    question: "¿Cuál es la UIT 2026 y para qué sirve?",
+    question: "¿Qué es la UIT?",
     answer:
-      "La UIT 2026 es S/ 5,500. Se usa como referencia para la deducción de 7 UIT y para los tramos de la renta de quinta categoría."
+      "La Unidad Impositiva Tributaria (UIT) es el valor de referencia en soles establecido cada año por el Estado peruano para calcular impuestos, multas, deducciones y límites legales."
   },
   {
     question: "¿La calculadora incluye gratificaciones y CTS?",
     answer:
-      "Por el momento no, pero en las próximas versiones se está considerando."
+      "Este cálculo es solo de sueldo neto. Desde los enlaces al final de la página puedes ir a las calculadoras de CTS y gratificación."
   },
   {
     question: "¿El resultado es exacto?",

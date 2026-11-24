@@ -4,8 +4,8 @@ import { useState, type ReactNode } from "react";
 import Input from "@/components/atoms/input";
 import Select from "@/components/atoms/select";
 import Button from "@/components/atoms/button";
-import ResultPanel from "@/components/molecules/result-panel";
-import WithholdingDetail from "@/components/molecules/withholding-detail";
+import ResultPanel from "./result-panel";
+import WithholdingDetail from "./withholding-detail";
 import { calculateBreakdown } from "@/lib/payroll/calculate";
 import type { Breakdown, CommissionType } from "@/lib/payroll/types";
 import {
@@ -14,12 +14,7 @@ import {
   PENSION_OPTIONS,
   YEAR_OPTIONS
 } from "@/lib/constants/form-options";
-import type { FormSettings } from "@/lib/storage/form-settings";
-
-interface CalculatorFormProps {
-  settings: FormSettings;
-  onSettingsChange: (patch: Partial<FormSettings>) => void;
-}
+import { useFormSettings } from "@/components/providers/form-settings-provider";
 
 interface FormState {
   baseSalary: string;
@@ -33,13 +28,12 @@ const INITIAL_STATE: FormState = {
   additionalDeduction: ""
 };
 
-export default function CalculatorForm({
-  settings,
-  onSettingsChange
-}: CalculatorFormProps) {
+export default function SalaryForm() {
+  const { settings, updateSettings: onSettingsChange } = useFormSettings();
   const [form, setForm] = useState<FormState>(INITIAL_STATE);
   const [resultado, setResultado] = useState<Breakdown | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [deductionError, setDeductionError] = useState<string | null>(null);
 
   const set = <K extends keyof FormState>(key: K, value: FormState[K]) =>
     setForm((prev) => ({ ...prev, [key]: value }));
@@ -50,14 +44,28 @@ export default function CalculatorForm({
     if (settings.year === null) return;
 
     const baseSalary = Number(form.baseSalary) || 0;
-    if (baseSalary <= 0) {
-      setError("Ingresa tu sueldo base para calcular.");
+    const additionalDeduction = Number(form.additionalDeduction) || 0;
+
+    if (baseSalary < 1) {
+      setError("Ingresa un sueldo base de al menos S/ 1.");
+      setDeductionError(null);
       setResultado(null);
       document.getElementById("base-salary")?.focus();
       return;
     }
 
+    if (additionalDeduction > baseSalary) {
+      setError(null);
+      setDeductionError(
+        "El descuento adicional no puede ser mayor al sueldo base."
+      );
+      setResultado(null);
+      document.getElementById("additional-deduction")?.focus();
+      return;
+    }
+
     setError(null);
+    setDeductionError(null);
     setResultado(
       calculateBreakdown({
         baseSalary,
@@ -66,7 +74,7 @@ export default function CalculatorForm({
         year: settings.year,
         hasFamilyAllowance: settings.familyAllowance === "yes",
         bonuses: Number(form.bonuses) || 0,
-        additionalDeduction: Number(form.additionalDeduction) || 0
+        additionalDeduction
       })
     );
   };
@@ -75,6 +83,7 @@ export default function CalculatorForm({
     setForm(INITIAL_STATE);
     setResultado(null);
     setError(null);
+    setDeductionError(null);
   };
 
   return (
@@ -94,7 +103,7 @@ export default function CalculatorForm({
               label="Sueldo base (S/) *"
               type="number"
               required
-              min={0}
+              min={1}
               step="0.01"
               inputMode="decimal"
               value={form.baseSalary}
@@ -171,13 +180,18 @@ export default function CalculatorForm({
               onChange={(e) => set("bonuses", e.target.value)}
             />
             <Input
+              id="additional-deduction"
               label="Descuento adicional (S/)"
               type="number"
               min={0}
               step="0.01"
               inputMode="decimal"
               value={form.additionalDeduction}
-              onChange={(e) => set("additionalDeduction", e.target.value)}
+              onChange={(e) => {
+                set("additionalDeduction", e.target.value);
+                if (deductionError) setDeductionError(null);
+              }}
+              error={deductionError ?? undefined}
             />
           </div>
         </Section>

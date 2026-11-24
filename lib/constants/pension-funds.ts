@@ -1,31 +1,31 @@
 export type CommissionType = "flow" | "mixed";
 
-export interface PensionFund {
+type PensionFundBase = {
   id: string;
   label: string;
-  kind: "onp" | "afp";
-  /** Mandatory contribution to the fund (%) */
   contribution: number;
-  /** Insurance premium (%) */
+};
+
+export type OnpFund = PensionFundBase & {
+  kind: "onp";
+};
+
+export type AfpFund = PensionFundBase & {
+  kind: "afp";
   insurancePremium: number;
-  /** Flow commission: % of monthly remuneration */
   flowCommission: number;
-  /** Mixed commission: % of monthly remuneration */
   mixedFlowCommission: number;
-  /** Mixed commission: annual % on the accumulated fund (not deducted from salary) */
   mixedBalanceCommission: number;
-}
+};
+
+export type PensionFund = OnpFund | AfpFund;
 
 export const PENSION_FUNDS: PensionFund[] = [
   {
     id: "onp",
     label: "ONP",
     kind: "onp",
-    contribution: 13,
-    insurancePremium: 0,
-    flowCommission: 0,
-    mixedFlowCommission: 0,
-    mixedBalanceCommission: 0
+    contribution: 13
   },
   {
     id: "afp-integra",
