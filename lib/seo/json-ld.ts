@@ -1,4 +1,4 @@
-import { SITE_NAME, SITE_URL } from "./site";
+import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "./site";
 
 export function buildJsonLd(
   faqs: Array<{ question: string; answer: string }>
@@ -7,19 +7,35 @@ export function buildJsonLd(
     "@context": "https://schema.org",
     "@graph": [
       {
-        "@type": "WebApplication",
+        "@type": "WebSite",
         name: SITE_NAME,
-        url: SITE_URL,
-        applicationCategory: "FinanceApplication",
-        operatingSystem: "Web",
-        inLanguage: "es-PE",
-        description:
-          "Calculadora gratuita de sueldo neto en Perú: descuentos de AFP u ONP, retención de quinta categoría y asignación familiar.",
-        offers: {
-          "@type": "Offer",
-          price: "0",
-          priceCurrency: "PEN"
-        }
+        url: `${SITE_URL}/`,
+        description: SITE_DESCRIPTION,
+        inLanguage: "es-PE"
+      },
+      {
+        "@type": "ItemList",
+        name: "Calculadoras laborales en Perú",
+        itemListElement: [
+          {
+            "@type": "ListItem",
+            position: 1,
+            name: "Calculadora de sueldo neto",
+            url: `${SITE_URL}/`
+          },
+          {
+            "@type": "ListItem",
+            position: 2,
+            name: "Calculadora de CTS",
+            url: `${SITE_URL}/calculadora-cts`
+          },
+          {
+            "@type": "ListItem",
+            position: 3,
+            name: "Calculadora de gratificación",
+            url: `${SITE_URL}/calculadora-gratificacion`
+          }
+        ]
       },
       {
         "@type": "FAQPage",

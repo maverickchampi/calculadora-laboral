@@ -46,21 +46,21 @@ export function renderSocialImage() {
       <div style={{ display: "flex", flexDirection: "column" }}>
         <div
           style={{
-            fontSize: 68,
+            fontSize: 64,
             fontWeight: 700,
             color: "#16161a",
             lineHeight: 1.1
           }}
         >
-          Calculadora de sueldo neto en Perú
+          Calculadoras laborales en Perú
         </div>
         <div style={{ fontSize: 30, color: "#667085", marginTop: 20 }}>
-          AFP · ONP · Renta 5ta · UIT 2026
+          Sueldo neto · CTS · Gratificación
         </div>
       </div>
 
       <div style={{ display: "flex", fontSize: 26, color: "#d91023", fontWeight: 700 }}>
-        Descubre cuánto recibirás al mes
+        Calcula lo que te corresponde en segundos
       </div>
     </div>
   );

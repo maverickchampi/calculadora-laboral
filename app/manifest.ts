@@ -1,11 +1,11 @@
 import type { MetadataRoute } from "next";
+import { SITE_DESCRIPTION, SITE_NAME } from "@/lib/seo/site";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Calculadora Laboral",
+    name: SITE_NAME,
     short_name: "Calc. Laboral",
-    description:
-      "Calcula gratis tu sueldo neto en Perú: AFP u ONP, retención de quinta categoría y asignación familiar.",
+    description: SITE_DESCRIPTION,
     start_url: "/",
     display: "standalone",
     background_color: "#ffffff",

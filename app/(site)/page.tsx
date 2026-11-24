@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import CalculatorLinks from "@/components/molecules/calculator-links";
 import DataTable from "@/components/molecules/data-table";
 import FaqAccordion from "@/components/molecules/faq-accordion";
@@ -5,9 +6,17 @@ import InfoCard from "@/components/molecules/info-card";
 import PageHero from "@/components/molecules/page-hero";
 import { getRelatedCalculators } from "@/lib/constants/calculators";
 import { getPensionRate, PENSION_FUNDS } from "@/lib/constants/pension-funds";
+import { buildMetadata } from "@/lib/seo/metadata";
 import { buildJsonLd } from "@/lib/seo/json-ld";
 import SalaryForm from "./_components/salary-form";
 import { FAQ_ITEMS } from "./faqs";
+
+export const metadata: Metadata = buildMetadata({
+  title: "Calculadora de sueldo neto en Perú 2026",
+  description:
+    "Calcula gratis tu sueldo neto en Perú: descuentos de AFP u ONP, retención de quinta categoría, asignación familiar y UIT 2026. Conoce cuánto recibirás al mes.",
+  path: "/"
+});
 
 export default function Page() {
   const jsonLd = buildJsonLd(FAQ_ITEMS);
