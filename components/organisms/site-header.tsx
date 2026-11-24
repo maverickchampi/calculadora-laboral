@@ -3,10 +3,10 @@
 import Link from "next/link";
 import ThemeToggle from "@/components/atoms/theme-toggle";
 import FiscalInfoModal from "@/components/molecules/fiscal-info-modal";
-import { useFormSettings } from "@/components/providers/form-settings-provider";
+import { useFormSettingsStore } from "@/lib/stores/form-settings-store";
 
 export default function SiteHeader() {
-  const { settings } = useFormSettings();
+  const year = useFormSettingsStore((state) => state.year);
 
   return (
     <header className="border-b border-line bg-card">
@@ -32,7 +32,7 @@ export default function SiteHeader() {
           </span>
         </Link>
         <div className="flex shrink-0 items-center gap-2">
-          <FiscalInfoModal year={settings.year} />
+          <FiscalInfoModal year={year} />
           <ThemeToggle />
         </div>
       </div>

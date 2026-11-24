@@ -1,11 +1,19 @@
 "use client";
 
 import { useState, type ReactNode } from "react";
+import { Controller, useForm } from "react-hook-form";
 import Input from "@/components/atoms/input";
 import Select from "@/components/atoms/select";
 import Button from "@/components/atoms/button";
 import ResultPanel from "./result-panel";
 import WithholdingDetail from "./withholding-detail";
+import {
+  additionalDeductionRules,
+  baseSalaryRules,
+  bonusesRules,
+  SALARY_FORM_DEFAULTS,
+  type SalaryFormValues
+} from "./rules";
 import { calculateBreakdown } from "@/lib/payroll/calculate";
 import type { Breakdown, CommissionType } from "@/lib/payroll/types";
 import {
@@ -14,76 +22,43 @@ import {
   PENSION_OPTIONS,
   YEAR_OPTIONS
 } from "@/lib/constants/form-options";
-import { useFormSettings } from "@/components/providers/form-settings-provider";
-
-interface FormState {
-  baseSalary: string;
-  bonuses: string;
-  additionalDeduction: string;
-}
-
-const INITIAL_STATE: FormState = {
-  baseSalary: "",
-  bonuses: "",
-  additionalDeduction: ""
-};
+import { useFormSettingsStore } from "@/lib/stores/form-settings-store";
 
 export default function SalaryForm() {
-  const { settings, updateSettings: onSettingsChange } = useFormSettings();
-  const [form, setForm] = useState<FormState>(INITIAL_STATE);
+  const year = useFormSettingsStore((state) => state.year);
+  const pensionFundId = useFormSettingsStore((state) => state.pensionFundId);
+  const commissionType = useFormSettingsStore((state) => state.commissionType);
+  const familyAllowance = useFormSettingsStore(
+    (state) => state.familyAllowance
+  );
+  const updateSettings = useFormSettingsStore((state) => state.updateSettings);
+
   const [resultado, setResultado] = useState<Breakdown | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [deductionError, setDeductionError] = useState<string | null>(null);
+  const isAfp = pensionFundId !== "onp";
 
-  const set = <K extends keyof FormState>(key: K, value: FormState[K]) =>
-    setForm((prev) => ({ ...prev, [key]: value }));
+  const { control, handleSubmit, reset } = useForm<SalaryFormValues>({
+    defaultValues: SALARY_FORM_DEFAULTS
+  });
 
-  const isAfp = settings.pensionFundId !== "onp";
+  const onSubmit = (values: SalaryFormValues) => {
+    if (year === null) return;
 
-  const handleCalculate = () => {
-    if (settings.year === null) return;
-
-    const baseSalary = Number(form.baseSalary) || 0;
-    const additionalDeduction = Number(form.additionalDeduction) || 0;
-
-    if (baseSalary < 1) {
-      setError("Ingresa un sueldo base de al menos S/ 1.");
-      setDeductionError(null);
-      setResultado(null);
-      document.getElementById("base-salary")?.focus();
-      return;
-    }
-
-    if (additionalDeduction > baseSalary) {
-      setError(null);
-      setDeductionError(
-        "El descuento adicional no puede ser mayor al sueldo base."
-      );
-      setResultado(null);
-      document.getElementById("additional-deduction")?.focus();
-      return;
-    }
-
-    setError(null);
-    setDeductionError(null);
     setResultado(
       calculateBreakdown({
-        baseSalary,
-        pensionFundId: settings.pensionFundId,
-        commissionType: settings.commissionType as CommissionType,
-        year: settings.year,
-        hasFamilyAllowance: settings.familyAllowance === "yes",
-        bonuses: Number(form.bonuses) || 0,
-        additionalDeduction
+        baseSalary: Number(values.baseSalary),
+        pensionFundId,
+        commissionType: commissionType as CommissionType,
+        year,
+        hasFamilyAllowance: familyAllowance === "yes",
+        bonuses: Number(values.bonuses) || 0,
+        additionalDeduction: Number(values.additionalDeduction) || 0
       })
     );
   };
 
   const handleClear = () => {
-    setForm(INITIAL_STATE);
+    reset(SALARY_FORM_DEFAULTS);
     setResultado(null);
-    setError(null);
-    setDeductionError(null);
   };
 
   return (
@@ -91,32 +66,36 @@ export default function SalaryForm() {
       <form
         className="space-y-6"
         noValidate
-        onSubmit={(e) => {
-          e.preventDefault();
-          handleCalculate();
-        }}
+        onSubmit={handleSubmit(onSubmit)}
       >
         <Section title="Datos laborales">
           <div className="grid gap-5 sm:grid-cols-2 [&>*]:min-w-0">
-            <Input
-              id="base-salary"
-              label="Sueldo base (S/) *"
-              type="number"
-              required
-              min={1}
-              step="0.01"
-              inputMode="decimal"
-              value={form.baseSalary}
-              onChange={(e) => {
-                set("baseSalary", e.target.value);
-                if (error) setError(null);
-              }}
-              error={error ?? undefined}
+            <Controller
+              name="baseSalary"
+              control={control}
+              rules={baseSalaryRules}
+              render={({ field, fieldState }) => (
+                <Input
+                  id="base-salary"
+                  label="Sueldo base (S/) *"
+                  type="number"
+                  required
+                  min={1}
+                  step="0.01"
+                  inputMode="decimal"
+                  name={field.name}
+                  value={field.value}
+                  onChange={field.onChange}
+                  onBlur={field.onBlur}
+                  ref={field.ref}
+                  error={fieldState.error?.message}
+                />
+              )}
             />
             <Select
               label="Año"
-              value={settings.year === null ? "" : String(settings.year)}
-              onChange={(e) => onSettingsChange({ year: Number(e.target.value) })}
+              value={year === null ? "" : String(year)}
+              onChange={(e) => updateSettings({ year: Number(e.target.value) })}
             >
               {YEAR_OPTIONS.map((o) => (
                 <option key={o.value} value={o.value}>
@@ -126,9 +105,9 @@ export default function SalaryForm() {
             </Select>
             <Select
               label="Sistema de pensiones"
-              value={settings.pensionFundId}
+              value={pensionFundId}
               onChange={(e) =>
-                onSettingsChange({ pensionFundId: e.target.value })
+                updateSettings({ pensionFundId: e.target.value })
               }
             >
               {PENSION_OPTIONS.map((o) => (
@@ -140,9 +119,9 @@ export default function SalaryForm() {
             {isAfp && (
               <Select
                 label="Tipo de comisión"
-                value={settings.commissionType}
+                value={commissionType}
                 onChange={(e) =>
-                  onSettingsChange({ commissionType: e.target.value })
+                  updateSettings({ commissionType: e.target.value })
                 }
               >
                 {COMMISSION_TYPE_OPTIONS.map((o) => (
@@ -154,9 +133,9 @@ export default function SalaryForm() {
             )}
             <Select
               label="Asignación familiar"
-              value={settings.familyAllowance}
+              value={familyAllowance}
               onChange={(e) =>
-                onSettingsChange({ familyAllowance: e.target.value })
+                updateSettings({ familyAllowance: e.target.value })
               }
             >
               {FAMILY_ALLOWANCE_OPTIONS.map((o) => (
@@ -170,28 +149,46 @@ export default function SalaryForm() {
 
         <Section title="Remuneración y adicionales">
           <div className="grid gap-5 sm:grid-cols-2 [&>*]:min-w-0">
-            <Input
-              label="Bonos / ingresos adicionales (S/)"
-              type="number"
-              min={0}
-              step="0.01"
-              inputMode="decimal"
-              value={form.bonuses}
-              onChange={(e) => set("bonuses", e.target.value)}
+            <Controller
+              name="bonuses"
+              control={control}
+              rules={bonusesRules}
+              render={({ field, fieldState }) => (
+                <Input
+                  label="Bonos / ingresos adicionales (S/)"
+                  type="number"
+                  min={0}
+                  step="0.01"
+                  inputMode="decimal"
+                  name={field.name}
+                  value={field.value}
+                  onChange={field.onChange}
+                  onBlur={field.onBlur}
+                  ref={field.ref}
+                  error={fieldState.error?.message}
+                />
+              )}
             />
-            <Input
-              id="additional-deduction"
-              label="Descuento adicional (S/)"
-              type="number"
-              min={0}
-              step="0.01"
-              inputMode="decimal"
-              value={form.additionalDeduction}
-              onChange={(e) => {
-                set("additionalDeduction", e.target.value);
-                if (deductionError) setDeductionError(null);
-              }}
-              error={deductionError ?? undefined}
+            <Controller
+              name="additionalDeduction"
+              control={control}
+              rules={additionalDeductionRules}
+              render={({ field, fieldState }) => (
+                <Input
+                  id="additional-deduction"
+                  label="Descuento adicional (S/)"
+                  type="number"
+                  min={0}
+                  step="0.01"
+                  inputMode="decimal"
+                  name={field.name}
+                  value={field.value}
+                  onChange={field.onChange}
+                  onBlur={field.onBlur}
+                  ref={field.ref}
+                  error={fieldState.error?.message}
+                />
+              )}
             />
           </div>
         </Section>
