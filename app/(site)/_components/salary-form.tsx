@@ -1,10 +1,11 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import Input from "@/components/atoms/input";
 import Select from "@/components/atoms/select";
 import Button from "@/components/atoms/button";
+import FormSection from "@/components/molecules/form-section";
 import ResultPanel from "./result-panel";
 import WithholdingDetail from "./withholding-detail";
 import {
@@ -68,7 +69,7 @@ export default function SalaryForm() {
         noValidate
         onSubmit={handleSubmit(onSubmit)}
       >
-        <Section title="Datos laborales">
+        <FormSection title="Datos laborales">
           <div className="grid gap-5 sm:grid-cols-2 [&>*]:min-w-0">
             <Controller
               name="baseSalary"
@@ -145,9 +146,9 @@ export default function SalaryForm() {
               ))}
             </Select>
           </div>
-        </Section>
+        </FormSection>
 
-        <Section title="Remuneración y adicionales">
+        <FormSection title="Remuneración y adicionales">
           <div className="grid gap-5 sm:grid-cols-2 [&>*]:min-w-0">
             <Controller
               name="bonuses"
@@ -191,7 +192,7 @@ export default function SalaryForm() {
               )}
             />
           </div>
-        </Section>
+        </FormSection>
 
         <div className="flex flex-col gap-3 sm:flex-row">
           <Button type="submit" variant="primary" className="sm:flex-1">
@@ -214,16 +215,5 @@ export default function SalaryForm() {
         )}
       </div>
     </div>
-  );
-}
-
-function Section({ title, children }: { title: string; children: ReactNode }) {
-  return (
-    <section className="overflow-hidden rounded-2xl border border-line bg-card">
-      <div className="border-b border-line bg-tint px-5 py-3 sm:px-6">
-        <h2 className="text-sm font-semibold text-foreground">{title}</h2>
-      </div>
-      <div className="p-5 sm:p-8">{children}</div>
-    </section>
   );
 }
