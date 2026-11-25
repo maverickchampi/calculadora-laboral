@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useLayoutEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import Input from "@/components/atoms/input";
 import Select from "@/components/atoms/select";
@@ -41,6 +41,13 @@ export default function SalaryForm() {
   const { control, handleSubmit, reset } = useForm<SalaryFormValues>({
     defaultValues: SALARY_FORM_DEFAULTS
   });
+
+  useLayoutEffect(() => {
+    return () => {
+      reset(SALARY_FORM_DEFAULTS);
+      setResultado(null);
+    };
+  }, [reset]);
 
   const onSubmit = (values: SalaryFormValues) => {
     setResultado(

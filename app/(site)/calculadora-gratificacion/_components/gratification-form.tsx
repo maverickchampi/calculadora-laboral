@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useLayoutEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import Input from "@/components/atoms/input";
 import Select from "@/components/atoms/select";
@@ -30,8 +30,13 @@ export default function GratificationForm() {
     defaultValues: GRATIFICATION_FORM_DEFAULTS
   });
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     reset(getGratificationFormDefaults());
+
+    return () => {
+      reset(GRATIFICATION_FORM_DEFAULTS);
+      setResult(null);
+    };
   }, [reset]);
 
   const familyAllowanceAmount = LATEST_FISCAL_YEAR.familyAllowance;
@@ -87,7 +92,7 @@ export default function GratificationForm() {
               render={({ field, fieldState }) => (
                 <Input
                   id="entry-date"
-                  label="Fecha de ingreso"
+                  label="Fecha de ingreso *"
                   type="date"
                   required
                   name={field.name}

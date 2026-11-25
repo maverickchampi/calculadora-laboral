@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useLayoutEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import Input from "@/components/atoms/input";
 import Select from "@/components/atoms/select";
@@ -28,8 +28,13 @@ export default function CtsForm() {
     defaultValues: CTS_FORM_DEFAULTS
   });
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     reset(getCtsFormDefaults());
+
+    return () => {
+      reset(CTS_FORM_DEFAULTS);
+      setResult(null);
+    };
   }, [reset]);
 
   const onSubmit = (values: CtsFormValues) => {
@@ -84,7 +89,7 @@ export default function CtsForm() {
               render={({ field, fieldState }) => (
                 <Input
                   id="cts-entry-date"
-                  label="Fecha de ingreso"
+                  label="Fecha de ingreso *"
                   type="date"
                   required
                   name={field.name}
