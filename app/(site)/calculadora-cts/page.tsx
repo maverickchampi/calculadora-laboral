@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
-import CalculatorLinks from "@/components/molecules/calculator-links";
 import DataTable from "@/components/molecules/data-table";
 import InfoCard from "@/components/molecules/info-card";
 import PageHero from "@/components/molecules/page-hero";
-import { getRelatedCalculators } from "@/lib/constants/calculators";
 import { buildMetadata } from "@/lib/seo/metadata";
 import CtsForm from "./_components/cts-form";
 
@@ -26,15 +24,11 @@ export default function Page() {
         <CtsForm />
       </div>
 
-      <div className="mx-auto w-full max-w-[1024px] px-4 py-10 sm:px-6 sm:py-14">
+      <div className="mx-auto w-full max-w-[1024px] px-4 py-8 sm:px-6 sm:py-10">
         <hr className="border-t border-line" />
       </div>
 
-      <div className="mx-auto w-full max-w-[1024px] px-4 sm:px-6">
-        <CalculatorLinks items={getRelatedCalculators("/calculadora-cts")} />
-      </div>
-
-      <div className="mx-auto w-full max-w-[1024px] space-y-6 px-4 pb-12 pt-10 sm:px-6 sm:pb-16 sm:pt-12">
+      <div className="mx-auto w-full max-w-[1024px] space-y-6 px-4 pb-12 pt-8 sm:px-6 sm:pb-16 sm:pt-10">
         <InfoCard title="¿Cómo se calcula la CTS?">
           <p className="mt-3 text-sm leading-relaxed text-muted">
             La CTS se deposita dos veces al año: en mayo (periodo noviembre a

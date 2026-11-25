@@ -15,19 +15,11 @@ export const SUPPORTED_YEARS = Object.values(FISCAL_YEARS).sort(
   (a, b) => a.year - b.year
 );
 
+export const LATEST_FISCAL_YEAR =
+  SUPPORTED_YEARS[SUPPORTED_YEARS.length - 1];
+
 export function getFiscalYear(year: number): FiscalYear {
-  return FISCAL_YEARS[year] ?? FISCAL_YEARS[2026];
-}
-
-export function getDefaultYear(currentYear: number): number {
-  if (FISCAL_YEARS[currentYear]) return currentYear;
-
-  return SUPPORTED_YEARS.reduce((closest, fiscalYear) =>
-    Math.abs(fiscalYear.year - currentYear) <
-    Math.abs(closest.year - currentYear)
-      ? fiscalYear
-      : closest,
-  SUPPORTED_YEARS[0]).year;
+  return FISCAL_YEARS[year] ?? LATEST_FISCAL_YEAR;
 }
 
 export const INCOME_TAX_DEDUCTION_UIT = 7;

@@ -2,12 +2,10 @@
 
 import Link from "next/link";
 import ThemeToggle from "@/components/atoms/theme-toggle";
+import CalculatorMenu from "@/components/molecules/calculator-menu";
 import FiscalInfoModal from "@/components/molecules/fiscal-info-modal";
-import { useFormSettingsStore } from "@/lib/stores/form-settings-store";
 
 export default function SiteHeader() {
-  const year = useFormSettingsStore((state) => state.year);
-
   return (
     <header className="border-b border-line bg-card">
       <div className="mx-auto flex w-full max-w-[1200px] items-center justify-between gap-4 px-4 py-4 sm:px-8 sm:py-5">
@@ -32,7 +30,8 @@ export default function SiteHeader() {
           </span>
         </Link>
         <div className="flex shrink-0 items-center gap-2">
-          <FiscalInfoModal year={year} />
+          <CalculatorMenu />
+          <FiscalInfoModal />
           <ThemeToggle />
         </div>
       </div>

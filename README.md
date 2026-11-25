@@ -17,7 +17,7 @@ A **net salary calculator for Peru** that turns a gross monthly salary into the 
 - **Gross → net salary** calculation with a clear breakdown.
 - **Pension systems**: ONP (13%) and the four AFPs, with **flow** and **mixed** commission schemes.
 - **Fifth-category income tax** (renta de quinta) projected annually and split into a monthly withholding.
-- **Fiscal year selector** (2025 / 2026) with UIT, RMV and family allowance driven by a single config object.
+- **Latest fiscal year** (UIT, RMV and family allowance) driven by a single config object, with no manual year picker.
 - **Dark / light mode** persisted in `localStorage`, with no flash on load.
 - **Accessible by design**: skip link, landmarks, labeled fields, `aria-live` results, accessible validation and focus management.
 - **SEO-ready**: metadata, canonical, Open Graph / Twitter images, `robots.txt`, `sitemap.xml`, web manifest and JSON-LD.
@@ -127,7 +127,7 @@ Annual tax      = progressive brackets applied to annual net
 Monthly tax     = annual tax ÷ 12
 ```
 
-Progressive brackets (expressed in UIT, so they adapt to the selected year):
+Progressive brackets (expressed in UIT, so they adapt to the latest fiscal year):
 
 | Bracket | UIT range | Rate |
 | --- | --- | --- |
@@ -148,7 +148,7 @@ export const FISCAL_YEARS: Record<number, FiscalYear> = {
 };
 ```
 
-The selector, the calculator and the fiscal modal pick it up automatically.
+The app always uses the newest entry (the last one after sorting by year), and the calculators and fiscal modal pick it up automatically.
 
 ---
 

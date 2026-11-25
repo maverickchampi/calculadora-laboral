@@ -3,6 +3,7 @@ import { Geist } from "next/font/google";
 import "./globals.css";
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/seo/site";
 import { STORAGE_KEYS } from "@/lib/constants/storage";
+import { LATEST_FISCAL_YEAR } from "@/lib/constants/fiscal-years";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,7 +28,7 @@ export const metadata: Metadata = {
     "descuentos AFP",
     "ONP",
     "retención quinta categoría",
-    "UIT 2026",
+    `UIT ${LATEST_FISCAL_YEAR.year}`,
     "asignación familiar",
     "calculadora de CTS",
     "CTS Perú",

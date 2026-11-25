@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
-import CalculatorLinks from "@/components/molecules/calculator-links";
 import DataTable from "@/components/molecules/data-table";
 import FaqAccordion from "@/components/molecules/faq-accordion";
 import InfoCard from "@/components/molecules/info-card";
 import PageHero from "@/components/molecules/page-hero";
-import { getRelatedCalculators } from "@/lib/constants/calculators";
+import { LATEST_FISCAL_YEAR } from "@/lib/constants/fiscal-years";
 import { getPensionRate, PENSION_FUNDS } from "@/lib/constants/pension-funds";
 import { buildMetadata } from "@/lib/seo/metadata";
 import { buildJsonLd } from "@/lib/seo/json-ld";
@@ -12,9 +11,8 @@ import SalaryForm from "./_components/salary-form";
 import { FAQ_ITEMS } from "./faqs";
 
 export const metadata: Metadata = buildMetadata({
-  title: "Calculadora de sueldo neto en Perú 2026",
-  description:
-    "Calcula gratis tu sueldo neto en Perú: descuentos de AFP u ONP, retención de quinta categoría, asignación familiar y UIT 2026. Conoce cuánto recibirás al mes.",
+  title: `Calculadora de sueldo neto en Perú ${LATEST_FISCAL_YEAR.year}`,
+  description: `Calcula gratis tu sueldo neto en Perú: descuentos de AFP u ONP, retención de quinta categoría, asignación familiar y UIT ${LATEST_FISCAL_YEAR.year}. Conoce cuánto recibirás al mes.`,
   path: "/"
 });
 
@@ -43,15 +41,11 @@ export default function Page() {
         <SalaryForm />
       </div>
 
-      <div className="mx-auto w-full max-w-[1024px] px-4 py-10 sm:px-6 sm:py-14">
+      <div className="mx-auto w-full max-w-[1024px] px-4 py-8 sm:px-6 sm:py-10">
         <hr className="border-t border-line" />
       </div>
 
-      <div className="mx-auto w-full max-w-[1024px] px-4 sm:px-6">
-        <CalculatorLinks items={getRelatedCalculators("/")} />
-      </div>
-
-      <div className="mx-auto w-full max-w-[1024px] space-y-6 px-4 pb-12 pt-10 sm:px-6 sm:pb-16 sm:pt-12">
+      <div className="mx-auto w-full max-w-[1024px] space-y-6 px-4 pb-12 pt-8 sm:px-6 sm:pb-16 sm:pt-10">
         <InfoCard title="¿Cómo se calcula el sueldo neto en Perú?">
           <p className="mt-3 text-sm leading-relaxed text-muted">
             El sueldo neto es el monto que recibes después de descontar los

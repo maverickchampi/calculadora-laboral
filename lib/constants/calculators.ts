@@ -24,7 +24,3 @@ export const CALCULATORS: CalculatorLink[] = [
       "Calcula tu gratificación de julio o diciembre, incluida la bonificación."
   }
 ];
-
-export function getRelatedCalculators(currentHref: string): CalculatorLink[] {
-  return CALCULATORS.filter((calculator) => calculator.href !== currentHref);
-}

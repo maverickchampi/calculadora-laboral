@@ -20,13 +20,12 @@ import type { Breakdown, CommissionType } from "@/lib/payroll/types";
 import {
   COMMISSION_TYPE_OPTIONS,
   FAMILY_ALLOWANCE_OPTIONS,
-  PENSION_OPTIONS,
-  YEAR_OPTIONS
+  PENSION_OPTIONS
 } from "@/lib/constants/form-options";
+import { LATEST_FISCAL_YEAR } from "@/lib/constants/fiscal-years";
 import { useFormSettingsStore } from "@/lib/stores/form-settings-store";
 
 export default function SalaryForm() {
-  const year = useFormSettingsStore((state) => state.year);
   const pensionFundId = useFormSettingsStore((state) => state.pensionFundId);
   const commissionType = useFormSettingsStore((state) => state.commissionType);
   const familyAllowance = useFormSettingsStore(
@@ -42,14 +41,12 @@ export default function SalaryForm() {
   });
 
   const onSubmit = (values: SalaryFormValues) => {
-    if (year === null) return;
-
     setResultado(
       calculateBreakdown({
         baseSalary: Number(values.baseSalary),
         pensionFundId,
         commissionType: commissionType as CommissionType,
-        year,
+        year: LATEST_FISCAL_YEAR.year,
         hasFamilyAllowance: familyAllowance === "yes",
         bonuses: Number(values.bonuses) || 0,
         additionalDeduction: Number(values.additionalDeduction) || 0
@@ -93,17 +90,6 @@ export default function SalaryForm() {
                 />
               )}
             />
-            <Select
-              label="Año"
-              value={year === null ? "" : String(year)}
-              onChange={(e) => updateSettings({ year: Number(e.target.value) })}
-            >
-              {YEAR_OPTIONS.map((o) => (
-                <option key={o.value} value={o.value}>
-                  {o.label}
-                </option>
-              ))}
-            </Select>
             <Select
               label="Sistema de pensiones"
               value={pensionFundId}

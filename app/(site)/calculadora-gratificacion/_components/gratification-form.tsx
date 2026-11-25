@@ -17,33 +17,26 @@ import {
   calculateGratifications,
   type GratificationPeriod
 } from "@/lib/payroll/gratification";
-import { getFiscalYear } from "@/lib/constants/fiscal-years";
-import { YEAR_OPTIONS } from "@/lib/constants/form-options";
+import { LATEST_FISCAL_YEAR } from "@/lib/constants/fiscal-years";
 import { formatSoles } from "@/lib/helpers/format";
-import { useFormSettingsStore } from "@/lib/stores/form-settings-store";
 
 export default function GratificationForm() {
-  const year = useFormSettingsStore((state) => state.year);
-  const updateSettings = useFormSettingsStore((state) => state.updateSettings);
   const [periods, setPeriods] = useState<GratificationPeriod[] | null>(null);
 
   const { control, handleSubmit, reset } = useForm<GratificationFormValues>({
     defaultValues: GRATIFICATION_FORM_DEFAULTS
   });
 
-  const familyAllowanceAmount =
-    year === null ? null : getFiscalYear(year).familyAllowance;
+  const familyAllowanceAmount = LATEST_FISCAL_YEAR.familyAllowance;
 
   const onSubmit = (values: GratificationFormValues) => {
-    if (year === null) return;
-
     setPeriods(
       calculateGratifications({
         monthlySalary: Number(values.monthlySalary),
         hasFamilyAllowance: values.familyAllowance === "yes",
         insuranceType: values.insuranceType,
         entryDate: values.entryDate,
-        fiscalYear: year
+        fiscalYear: LATEST_FISCAL_YEAR.year
       })
     );
   };
@@ -112,10 +105,7 @@ export default function GratificationForm() {
                 >
                   <option value="no">No</option>
                   <option value="yes">
-                    Sí
-                    {familyAllowanceAmount !== null
-                      ? ` (${formatSoles(familyAllowanceAmount)})`
-                      : ""}
+                    Sí ({formatSoles(familyAllowanceAmount)})
                   </option>
                 </Select>
               )}
@@ -136,21 +126,10 @@ export default function GratificationForm() {
                 </Select>
               )}
             />
-            <Select
-              label="Año"
-              value={year === null ? "" : String(year)}
-              onChange={(e) => updateSettings({ year: Number(e.target.value) })}
-            >
-              {YEAR_OPTIONS.map((o) => (
-                <option key={o.value} value={o.value}>
-                  {o.label}
-                </option>
-              ))}
-            </Select>
           </div>
           <p className="mt-4 text-xs text-muted">
-            El año se usa para la asignación familiar (10% de la RMV). La fecha
-            de ingreso determina los meses completos de cada semestre.
+            La asignación familiar se calcula con la RMV vigente. La fecha de
+            ingreso determina los meses completos de cada semestre.
           </p>
         </FormSection>
 

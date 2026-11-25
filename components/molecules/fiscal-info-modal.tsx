@@ -3,16 +3,11 @@
 import { useState } from "react";
 import Modal from "@/components/atoms/modal";
 import Button from "@/components/atoms/button";
-import { getFiscalYear } from "@/lib/constants/fiscal-years";
+import { LATEST_FISCAL_YEAR } from "@/lib/constants/fiscal-years";
 import { formatSoles } from "@/lib/helpers/format";
 
-interface FiscalInfoModalProps {
-  year: number | null;
-}
-
-export default function FiscalInfoModal({ year }: FiscalInfoModalProps) {
+export default function FiscalInfoModal() {
   const [isOpen, setIsOpen] = useState(false);
-  const fiscalYear = year === null ? null : getFiscalYear(year);
 
   return (
     <>
@@ -29,26 +24,22 @@ export default function FiscalInfoModal({ year }: FiscalInfoModalProps) {
       <Modal
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}
-        title={year === null ? "Datos fiscales" : `Datos fiscales ${year}`}
+        title={`Datos fiscales ${LATEST_FISCAL_YEAR.year}`}
         ariaLabelClose="Cerrar"
         hasCloseButtonInDesktop
         closeInClickOut
       >
-        {fiscalYear === null ? (
-          <p className="text-sm text-muted">Cargando datos fiscales…</p>
-        ) : (
-          <dl className="space-y-2 text-sm">
-            <Row
-              label="Sueldo mínimo (RMV)"
-              value={formatSoles(fiscalYear.minimumWage)}
-            />
-            <Row
-              label="Asignación familiar"
-              value={formatSoles(fiscalYear.familyAllowance)}
-            />
-            <Row label="UIT" value={formatSoles(fiscalYear.uit)} />
-          </dl>
-        )}
+        <dl className="space-y-2 text-sm">
+          <Row
+            label="Sueldo mínimo (RMV)"
+            value={formatSoles(LATEST_FISCAL_YEAR.minimumWage)}
+          />
+          <Row
+            label="Asignación familiar"
+            value={formatSoles(LATEST_FISCAL_YEAR.familyAllowance)}
+          />
+          <Row label="UIT" value={formatSoles(LATEST_FISCAL_YEAR.uit)} />
+        </dl>
       </Modal>
     </>
   );

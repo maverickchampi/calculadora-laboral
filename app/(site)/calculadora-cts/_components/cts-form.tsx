@@ -15,31 +15,24 @@ import {
   type CtsFormValues
 } from "./rules";
 import { calculateCts, type CtsPeriod } from "@/lib/payroll/cts";
-import { getFiscalYear } from "@/lib/constants/fiscal-years";
-import { YEAR_OPTIONS } from "@/lib/constants/form-options";
+import { LATEST_FISCAL_YEAR } from "@/lib/constants/fiscal-years";
 import { formatSoles } from "@/lib/helpers/format";
-import { useFormSettingsStore } from "@/lib/stores/form-settings-store";
 
 export default function CtsForm() {
-  const year = useFormSettingsStore((state) => state.year);
-  const updateSettings = useFormSettingsStore((state) => state.updateSettings);
   const [periods, setPeriods] = useState<CtsPeriod[] | null>(null);
 
   const { control, handleSubmit, reset } = useForm<CtsFormValues>({
     defaultValues: CTS_FORM_DEFAULTS
   });
 
-  const familyAllowanceAmount =
-    year === null ? null : getFiscalYear(year).familyAllowance;
+  const familyAllowanceAmount = LATEST_FISCAL_YEAR.familyAllowance;
 
   const onSubmit = (values: CtsFormValues) => {
-    if (year === null) return;
-
     setPeriods(
       calculateCts({
         monthlySalary: Number(values.monthlySalary),
         hasFamilyAllowance: values.familyAllowance === "yes",
-        fiscalYear: year,
+        fiscalYear: LATEST_FISCAL_YEAR.year,
         entryDate: values.entryDate,
         gratification:
           values.gratification === "" ? null : Number(values.gratification)
@@ -111,10 +104,7 @@ export default function CtsForm() {
                 >
                   <option value="no">No</option>
                   <option value="yes">
-                    Sí
-                    {familyAllowanceAmount !== null
-                      ? ` (${formatSoles(familyAllowanceAmount)})`
-                      : ""}
+                    Sí ({formatSoles(familyAllowanceAmount)})
                   </option>
                 </Select>
               )}
@@ -140,21 +130,10 @@ export default function CtsForm() {
                 />
               )}
             />
-            <Select
-              label="Año"
-              value={year === null ? "" : String(year)}
-              onChange={(e) => updateSettings({ year: Number(e.target.value) })}
-            >
-              {YEAR_OPTIONS.map((o) => (
-                <option key={o.value} value={o.value}>
-                  {o.label}
-                </option>
-              ))}
-            </Select>
           </div>
           <p className="mt-4 text-xs text-muted">
             Si no ingresas la gratificación, estimamos el 1/6 con el sueldo
-            bruto. El año se usa para la asignación familiar (10% de la RMV).
+            bruto. La asignación familiar se calcula con la RMV vigente.
           </p>
         </FormSection>
 
