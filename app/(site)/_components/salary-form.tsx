@@ -23,6 +23,7 @@ import {
   PENSION_OPTIONS
 } from "@/lib/constants/form-options";
 import { LATEST_FISCAL_YEAR } from "@/lib/constants/fiscal-years";
+import { useScrollToResult } from "@/lib/hooks/use-scroll-to-result";
 import { useFormSettingsStore } from "@/lib/stores/form-settings-store";
 
 export default function SalaryForm() {
@@ -34,6 +35,7 @@ export default function SalaryForm() {
   const updateSettings = useFormSettingsStore((state) => state.updateSettings);
 
   const [resultado, setResultado] = useState<Breakdown | null>(null);
+  const resultRef = useScrollToResult(resultado);
   const isAfp = pensionFundId !== "onp";
 
   const { control, handleSubmit, reset } = useForm<SalaryFormValues>({
@@ -91,6 +93,19 @@ export default function SalaryForm() {
               )}
             />
             <Select
+              label="Asignación familiar"
+              value={familyAllowance}
+              onChange={(e) =>
+                updateSettings({ familyAllowance: e.target.value })
+              }
+            >
+              {FAMILY_ALLOWANCE_OPTIONS.map((o) => (
+                <option key={o.value} value={o.value}>
+                  {o.label}
+                </option>
+              ))}
+            </Select>
+            <Select
               label="Sistema de pensiones"
               value={pensionFundId}
               onChange={(e) =>
@@ -118,19 +133,6 @@ export default function SalaryForm() {
                 ))}
               </Select>
             )}
-            <Select
-              label="Asignación familiar"
-              value={familyAllowance}
-              onChange={(e) =>
-                updateSettings({ familyAllowance: e.target.value })
-              }
-            >
-              {FAMILY_ALLOWANCE_OPTIONS.map((o) => (
-                <option key={o.value} value={o.value}>
-                  {o.label}
-                </option>
-              ))}
-            </Select>
           </div>
         </FormSection>
 
@@ -192,7 +194,12 @@ export default function SalaryForm() {
         </div>
       </form>
 
-      <div aria-live="polite" aria-atomic="false" className="space-y-6">
+      <div
+        ref={resultRef}
+        aria-live="polite"
+        aria-atomic="false"
+        className="scroll-mt-6 space-y-6"
+      >
         {resultado && (
           <>
             <ResultPanel data={resultado} />

@@ -23,6 +23,11 @@ export interface CtsInput {
   gratification?: number | null;
 }
 
+export interface CtsCalculation {
+  periods: CtsPeriod[];
+  skippedLabel: string | null;
+}
+
 function getPeriod(year: number, type: CtsType) {
   if (type === "mayo") {
     return {
@@ -39,19 +44,13 @@ function getPeriod(year: number, type: CtsType) {
   };
 }
 
-function isUpcoming(deposit: Date, reference: Date): boolean {
-  if (deposit.getFullYear() !== reference.getFullYear()) {
-    return deposit.getFullYear() > reference.getFullYear();
-  }
-
-  return deposit.getMonth() >= reference.getMonth();
-}
-
-export function calculateCts(input: CtsInput): CtsPeriod[] {
-  const reference = startOfDay(new Date());
+export function calculateCts(input: CtsInput): CtsCalculation {
+  const today = startOfDay(new Date());
   const entry = parseLocalDate(input.entryDate);
 
-  if (!entry) return [];
+  if (!entry) return { periods: [], skippedLabel: null };
+
+  const reference = entry > today ? entry : today;
 
   const allowance = input.hasFamilyAllowance
     ? getFiscalYear(input.fiscalYear).familyAllowance
@@ -62,25 +61,17 @@ export function calculateCts(input: CtsInput): CtsPeriod[] {
       : input.monthlySalary) / 6;
   const remuneration = input.monthlySalary + allowance + sixth;
 
-  const firstYear = Math.min(entry.getFullYear(), reference.getFullYear()) - 1;
-  const lastYear = Math.max(entry.getFullYear(), reference.getFullYear()) + 2;
-  const candidates: Array<{ period: CtsPeriod; deposit: Date }> = [];
+  const firstYear = Math.min(entry.getFullYear(), today.getFullYear()) - 1;
+  const lastYear = Math.max(entry.getFullYear(), today.getFullYear()) + 2;
+  const deposits: Array<{ deposit: Date; period: CtsPeriod }> = [];
 
   for (let year = firstYear; year <= lastYear; year++) {
     for (const type of ["mayo", "noviembre"] as const) {
       const { start, end, deposit } = getPeriod(year, type);
-
-      if (!isUpcoming(deposit, reference)) continue;
-
       const periodStart = entry > start ? entry : start;
-
-      if (periodStart > end) continue;
-
       const months = completeMonths(periodStart, end);
 
-      if (months <= 0) continue;
-
-      candidates.push({
+      deposits.push({
         deposit,
         period: {
           type,
@@ -97,8 +88,22 @@ export function calculateCts(input: CtsInput): CtsPeriod[] {
     }
   }
 
-  return candidates
-    .sort((a, b) => a.deposit.getTime() - b.deposit.getTime())
-    .slice(0, 2)
-    .map((candidate) => candidate.period);
+  deposits.sort((a, b) => a.deposit.getTime() - b.deposit.getTime());
+
+  const firstAfterEntry = deposits.find((item) => item.deposit >= entry);
+
+  const skippedLabel =
+    firstAfterEntry && firstAfterEntry.period.months === 0
+      ? firstAfterEntry.period.label
+      : null;
+
+  return {
+    periods: deposits
+      .filter(
+        (item) => item.deposit >= reference && item.period.months > 0
+      )
+      .slice(0, 2)
+      .map((item) => item.period),
+    skippedLabel
+  };
 }

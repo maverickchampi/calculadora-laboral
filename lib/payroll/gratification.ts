@@ -24,6 +24,11 @@ export interface GratificationInput {
   fiscalYear: number;
 }
 
+export interface GratificationCalculation {
+  periods: GratificationPeriod[];
+  skippedLabel: string | null;
+}
+
 const BONUS_RATE: Record<InsuranceType, number> = {
   essalud: 0.09,
   eps: 0.0675
@@ -40,17 +45,20 @@ function getPeriodBounds(year: number, type: GratificationType) {
 
   return {
     start: new Date(year, start, 1),
-    end: new Date(year, end + 1, 0)
+    end: new Date(year, end + 1, 0),
+    deposit: new Date(year, type === "julio" ? 6 : 11, 15)
   };
 }
 
 export function calculateGratifications(
   input: GratificationInput
-): GratificationPeriod[] {
-  const reference = startOfDay(new Date());
+): GratificationCalculation {
+  const today = startOfDay(new Date());
   const entry = parseLocalDate(input.entryDate);
 
-  if (!entry) return [];
+  if (!entry) return { periods: [], skippedLabel: null };
+
+  const reference = entry > today ? entry : today;
 
   const allowance = input.hasFamilyAllowance
     ? getFiscalYear(input.fiscalYear).familyAllowance
@@ -58,29 +66,20 @@ export function calculateGratifications(
   const remuneration = input.monthlySalary + allowance;
   const bonusRate = BONUS_RATE[input.insuranceType];
 
-  const firstYear = Math.min(entry.getFullYear(), reference.getFullYear()) - 1;
-  const lastYear = Math.max(entry.getFullYear(), reference.getFullYear()) + 2;
-  const candidates: Array<{ period: GratificationPeriod; end: Date }> = [];
+  const firstYear = Math.min(entry.getFullYear(), today.getFullYear()) - 1;
+  const lastYear = Math.max(entry.getFullYear(), today.getFullYear()) + 2;
+  const deposits: Array<{ deposit: Date; period: GratificationPeriod }> = [];
 
   for (let year = firstYear; year <= lastYear; year++) {
     for (const type of ["julio", "diciembre"] as const) {
-      const { start, end } = getPeriodBounds(year, type);
-
-      if (end < reference) continue;
-
+      const { start, end, deposit } = getPeriodBounds(year, type);
       const periodStart = entry > start ? entry : start;
-
-      if (periodStart > end) continue;
-
       const months = completeMonths(periodStart, end);
-
-      if (months <= 0) continue;
-
       const amount = remuneration * (months / 6);
       const bonus = amount * bonusRate;
 
-      candidates.push({
-        end,
+      deposits.push({
+        deposit,
         period: {
           type,
           year,
@@ -96,8 +95,22 @@ export function calculateGratifications(
     }
   }
 
-  return candidates
-    .sort((a, b) => a.end.getTime() - b.end.getTime())
-    .slice(0, 2)
-    .map((candidate) => candidate.period);
+  deposits.sort((a, b) => a.deposit.getTime() - b.deposit.getTime());
+
+  const firstAfterEntry = deposits.find((item) => item.deposit >= entry);
+
+  const skippedLabel =
+    firstAfterEntry && firstAfterEntry.period.months === 0
+      ? firstAfterEntry.period.label
+      : null;
+
+  return {
+    periods: deposits
+      .filter(
+        (item) => item.deposit >= reference && item.period.months > 0
+      )
+      .slice(0, 2)
+      .map((item) => item.period),
+    skippedLabel
+  };
 }

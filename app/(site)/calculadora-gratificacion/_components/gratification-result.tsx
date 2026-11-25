@@ -3,10 +3,12 @@ import type { GratificationPeriod } from "@/lib/payroll/gratification";
 
 interface GratificationResultProps {
   periods: GratificationPeriod[];
+  skippedLabel?: string | null;
 }
 
 export default function GratificationResult({
-  periods
+  periods,
+  skippedLabel
 }: GratificationResultProps) {
   if (periods.length === 0) return null;
 
@@ -17,6 +19,19 @@ export default function GratificationResult({
           Tu gratificación estimada
         </h2>
       </div>
+      {skippedLabel ? (
+        <p className="border-b border-line bg-tint px-5 py-3 text-xs leading-relaxed text-muted sm:px-6">
+          No te corresponde la gratificación de{" "}
+          <strong className="font-semibold text-foreground">
+            {skippedLabel}
+          </strong>{" "}
+          porque no completaste ningún mes del periodo. La siguiente es{" "}
+          <strong className="font-semibold text-foreground">
+            {periods[0].label}
+          </strong>
+          .
+        </p>
+      ) : null}
       <div className="divide-y divide-line">
         {periods.map((period, index) => (
           <article key={`${period.type}-${period.year}`} className="p-5 sm:p-8">

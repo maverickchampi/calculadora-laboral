@@ -1,4 +1,5 @@
 import type { RegisterOptions } from "react-hook-form";
+import { getTodayInputValue } from "@/lib/helpers/date";
 
 export interface CtsFormValues {
   monthlySalary: string;
@@ -13,6 +14,13 @@ export const CTS_FORM_DEFAULTS: CtsFormValues = {
   entryDate: "",
   gratification: ""
 };
+
+export function getCtsFormDefaults(): CtsFormValues {
+  return {
+    ...CTS_FORM_DEFAULTS,
+    entryDate: getTodayInputValue()
+  };
+}
 
 export const ctsMonthlySalaryRules: RegisterOptions<
   CtsFormValues,
@@ -36,13 +44,6 @@ export const ctsEntryDateRules: RegisterOptions<CtsFormValues, "entryDate"> = {
 
     if (Number.isNaN(date.getTime())) {
       return "Ingresa una fecha válida.";
-    }
-
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-
-    if (date > today) {
-      return "La fecha de ingreso no puede ser futura.";
     }
 
     return true;

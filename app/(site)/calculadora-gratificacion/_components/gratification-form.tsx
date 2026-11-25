@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import Input from "@/components/atoms/input";
 import Select from "@/components/atoms/select";
@@ -8,29 +8,36 @@ import Button from "@/components/atoms/button";
 import FormSection from "@/components/molecules/form-section";
 import GratificationResult from "./gratification-result";
 import {
-  entryDateRules,
   GRATIFICATION_FORM_DEFAULTS,
+  entryDateRules,
+  getGratificationFormDefaults,
   monthlySalaryRules,
   type GratificationFormValues
 } from "./rules";
 import {
   calculateGratifications,
-  type GratificationPeriod
+  type GratificationCalculation
 } from "@/lib/payroll/gratification";
 import { LATEST_FISCAL_YEAR } from "@/lib/constants/fiscal-years";
-import { formatSoles } from "@/lib/helpers/format";
+import { getTodayInputValue } from "@/lib/helpers/date";
+import { useScrollToResult } from "@/lib/hooks/use-scroll-to-result";
 
 export default function GratificationForm() {
-  const [periods, setPeriods] = useState<GratificationPeriod[] | null>(null);
+  const [result, setResult] = useState<GratificationCalculation | null>(null);
+  const resultRef = useScrollToResult(result);
 
   const { control, handleSubmit, reset } = useForm<GratificationFormValues>({
     defaultValues: GRATIFICATION_FORM_DEFAULTS
   });
 
+  useEffect(() => {
+    reset(getGratificationFormDefaults());
+  }, [reset]);
+
   const familyAllowanceAmount = LATEST_FISCAL_YEAR.familyAllowance;
 
   const onSubmit = (values: GratificationFormValues) => {
-    setPeriods(
+    setResult(
       calculateGratifications({
         monthlySalary: Number(values.monthlySalary),
         hasFamilyAllowance: values.familyAllowance === "yes",
@@ -42,8 +49,8 @@ export default function GratificationForm() {
   };
 
   const handleClear = () => {
-    reset(GRATIFICATION_FORM_DEFAULTS);
-    setPeriods(null);
+    reset(getGratificationFormDefaults());
+    setResult(null);
   };
 
   return (
@@ -80,13 +87,18 @@ export default function GratificationForm() {
               render={({ field, fieldState }) => (
                 <Input
                   id="entry-date"
-                  label="Fecha de ingreso *"
+                  label="Fecha de ingreso"
                   type="date"
                   required
                   name={field.name}
                   value={field.value}
                   onChange={field.onChange}
-                  onBlur={field.onBlur}
+                  onBlur={(event) => {
+                    field.onBlur();
+                    if (!event.target.value) {
+                      field.onChange(getTodayInputValue());
+                    }
+                  }}
                   ref={field.ref}
                   error={fieldState.error?.message}
                 />
@@ -104,9 +116,7 @@ export default function GratificationForm() {
                   onBlur={field.onBlur}
                 >
                   <option value="no">No</option>
-                  <option value="yes">
-                    Sí ({formatSoles(familyAllowanceAmount)})
-                  </option>
+                  <option value="yes">Sí</option>
                 </Select>
               )}
             />
@@ -121,23 +131,19 @@ export default function GratificationForm() {
                   onChange={field.onChange}
                   onBlur={field.onBlur}
                 >
-                  <option value="essalud">EsSalud (bono 9%)</option>
-                  <option value="eps">EPS privada (bono 6.75%)</option>
+                  <option value="essalud">EsSalud</option>
+                  <option value="eps">EPS</option>
                 </Select>
               )}
             />
           </div>
-          <p className="mt-4 text-xs text-muted">
-            La asignación familiar se calcula con la RMV vigente. La fecha de
-            ingreso determina los meses completos de cada semestre.
-          </p>
         </FormSection>
 
         <div className="flex flex-col gap-3 sm:flex-row">
           <Button type="submit" variant="primary" className="sm:flex-1">
             Calcular
           </Button>
-          {periods && (
+          {result && (
             <Button type="button" variant="outline" onClick={handleClear}>
               Limpiar
             </Button>
@@ -145,8 +151,18 @@ export default function GratificationForm() {
         </div>
       </form>
 
-      <div aria-live="polite" aria-atomic="false">
-        {periods && <GratificationResult periods={periods} />}
+      <div
+        ref={resultRef}
+        aria-live="polite"
+        aria-atomic="false"
+        className="scroll-mt-6"
+      >
+        {result && (
+          <GratificationResult
+            periods={result.periods}
+            skippedLabel={result.skippedLabel}
+          />
+        )}
       </div>
     </div>
   );

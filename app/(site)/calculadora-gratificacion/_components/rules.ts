@@ -1,5 +1,6 @@
 import type { RegisterOptions } from "react-hook-form";
 import type { InsuranceType } from "@/lib/payroll/gratification";
+import { getTodayInputValue } from "@/lib/helpers/date";
 
 export interface GratificationFormValues {
   monthlySalary: string;
@@ -14,6 +15,13 @@ export const GRATIFICATION_FORM_DEFAULTS: GratificationFormValues = {
   insuranceType: "essalud",
   entryDate: ""
 };
+
+export function getGratificationFormDefaults(): GratificationFormValues {
+  return {
+    ...GRATIFICATION_FORM_DEFAULTS,
+    entryDate: getTodayInputValue()
+  };
+}
 
 export const monthlySalaryRules: RegisterOptions<
   GratificationFormValues,

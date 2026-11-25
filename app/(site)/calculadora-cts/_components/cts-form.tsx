@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import Input from "@/components/atoms/input";
 import Select from "@/components/atoms/select";
@@ -8,27 +8,32 @@ import Button from "@/components/atoms/button";
 import FormSection from "@/components/molecules/form-section";
 import CtsResult from "./cts-result";
 import {
+  CTS_FORM_DEFAULTS,
   ctsEntryDateRules,
   ctsGratificationRules,
   ctsMonthlySalaryRules,
-  CTS_FORM_DEFAULTS,
+  getCtsFormDefaults,
   type CtsFormValues
 } from "./rules";
-import { calculateCts, type CtsPeriod } from "@/lib/payroll/cts";
+import { calculateCts, type CtsCalculation } from "@/lib/payroll/cts";
 import { LATEST_FISCAL_YEAR } from "@/lib/constants/fiscal-years";
-import { formatSoles } from "@/lib/helpers/format";
+import { getTodayInputValue } from "@/lib/helpers/date";
+import { useScrollToResult } from "@/lib/hooks/use-scroll-to-result";
 
 export default function CtsForm() {
-  const [periods, setPeriods] = useState<CtsPeriod[] | null>(null);
+  const [result, setResult] = useState<CtsCalculation | null>(null);
+  const resultRef = useScrollToResult(result);
 
   const { control, handleSubmit, reset } = useForm<CtsFormValues>({
     defaultValues: CTS_FORM_DEFAULTS
   });
 
-  const familyAllowanceAmount = LATEST_FISCAL_YEAR.familyAllowance;
+  useEffect(() => {
+    reset(getCtsFormDefaults());
+  }, [reset]);
 
   const onSubmit = (values: CtsFormValues) => {
-    setPeriods(
+    setResult(
       calculateCts({
         monthlySalary: Number(values.monthlySalary),
         hasFamilyAllowance: values.familyAllowance === "yes",
@@ -41,8 +46,8 @@ export default function CtsForm() {
   };
 
   const handleClear = () => {
-    reset(CTS_FORM_DEFAULTS);
-    setPeriods(null);
+    reset(getCtsFormDefaults());
+    setResult(null);
   };
 
   return (
@@ -79,13 +84,18 @@ export default function CtsForm() {
               render={({ field, fieldState }) => (
                 <Input
                   id="cts-entry-date"
-                  label="Fecha de ingreso *"
+                  label="Fecha de ingreso"
                   type="date"
                   required
                   name={field.name}
                   value={field.value}
                   onChange={field.onChange}
-                  onBlur={field.onBlur}
+                  onBlur={(event) => {
+                    field.onBlur();
+                    if (!event.target.value) {
+                      field.onChange(getTodayInputValue());
+                    }
+                  }}
                   ref={field.ref}
                   error={fieldState.error?.message}
                 />
@@ -103,12 +113,15 @@ export default function CtsForm() {
                   onBlur={field.onBlur}
                 >
                   <option value="no">No</option>
-                  <option value="yes">
-                    Sí ({formatSoles(familyAllowanceAmount)})
-                  </option>
+                  <option value="yes">Sí</option>
                 </Select>
               )}
             />
+          </div>
+        </FormSection>
+
+        <FormSection title="Gratificación (opcional)">
+          <div className="grid gap-5 sm:grid-cols-2 [&>*]:min-w-0">
             <Controller
               name="gratification"
               control={control}
@@ -133,7 +146,7 @@ export default function CtsForm() {
           </div>
           <p className="mt-4 text-xs text-muted">
             Si no ingresas la gratificación, estimamos el 1/6 con el sueldo
-            bruto. La asignación familiar se calcula con la RMV vigente.
+            bruto.
           </p>
         </FormSection>
 
@@ -141,7 +154,7 @@ export default function CtsForm() {
           <Button type="submit" variant="primary" className="sm:flex-1">
             Calcular
           </Button>
-          {periods && (
+          {result && (
             <Button type="button" variant="outline" onClick={handleClear}>
               Limpiar
             </Button>
@@ -149,8 +162,18 @@ export default function CtsForm() {
         </div>
       </form>
 
-      <div aria-live="polite" aria-atomic="false">
-        {periods && <CtsResult periods={periods} />}
+      <div
+        ref={resultRef}
+        aria-live="polite"
+        aria-atomic="false"
+        className="scroll-mt-6"
+      >
+        {result && (
+          <CtsResult
+            periods={result.periods}
+            skippedLabel={result.skippedLabel}
+          />
+        )}
       </div>
     </div>
   );

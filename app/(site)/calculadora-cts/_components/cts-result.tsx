@@ -3,9 +3,13 @@ import type { CtsPeriod } from "@/lib/payroll/cts";
 
 interface CtsResultProps {
   periods: CtsPeriod[];
+  skippedLabel?: string | null;
 }
 
-export default function CtsResult({ periods }: CtsResultProps) {
+export default function CtsResult({
+  periods,
+  skippedLabel
+}: CtsResultProps) {
   if (periods.length === 0) return null;
 
   return (
@@ -15,6 +19,19 @@ export default function CtsResult({ periods }: CtsResultProps) {
           Tu CTS estimada
         </h2>
       </div>
+      {skippedLabel ? (
+        <p className="border-b border-line bg-tint px-5 py-3 text-xs leading-relaxed text-muted sm:px-6">
+          No te corresponde el depósito de{" "}
+          <strong className="font-semibold text-foreground">
+            {skippedLabel}
+          </strong>{" "}
+          porque no completaste ningún mes del periodo. Tu próximo depósito es{" "}
+          <strong className="font-semibold text-foreground">
+            {periods[0].label}
+          </strong>
+          .
+        </p>
+      ) : null}
       <div className="divide-y divide-line">
         {periods.map((period, index) => (
           <article

@@ -11,6 +11,6 @@ export const COMMISSION_TYPE_OPTIONS = [
 ] as const;
 
 export const FAMILY_ALLOWANCE_OPTIONS = [
-  { value: "no", label: "No aplica" },
+  { value: "no", label: "No" },
   { value: "yes", label: "Sí" }
 ] as const;
